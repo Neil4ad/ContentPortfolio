@@ -1,6 +1,24 @@
-# config.py - CORRECT VERSION for your Flask app
+# config.py - CORRECTED By NEIL
 import os
 from datetime import timedelta
+
+def get_database_uri():
+    """Get database URI that works in different environments"""
+    if os.environ.get('DATABASE_URL'):
+        return os.environ.get('DATABASE_URL')
+    
+    # Try instance folder first (preferred)
+    instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
+    try:
+        os.makedirs(instance_path, exist_ok=True)
+        test_file = os.path.join(instance_path, 'test_write.tmp')
+        with open(test_file, 'w') as f:
+            f.write('test')
+        os.remove(test_file)
+        return f'sqlite:///{os.path.join(instance_path, "portfolio.db")}'
+    except (OSError, PermissionError):
+        # Fallback to project root if instance folder fails
+        return f'sqlite:///{os.path.join(os.path.dirname(os.path.abspath(__file__)), "portfolio.db")}'
 
 class Config:
     """Base configuration class"""
@@ -12,9 +30,8 @@ class Config:
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = None
     
-    # Database settings - FIXED to point to instance folder
-    # This ensures both admin and live site use the same database file
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///instance/portfolio.db'
+    # Database settings - Portable path that works on all systems
+    SQLALCHEMY_DATABASE_URI = get_database_uri()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # File upload settings
