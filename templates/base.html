@@ -1,0 +1,143 @@
+<!DOCTYPE html> 
+<html lang="en" data-theme="light"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0"> 
+    <meta name="description" content="Content Designer and Strategist Portfolio - Crafting engaging narratives across digital platforms"> 
+    <meta name="theme-color" content="{% if settings and settings.banner_gradient_start %}{{ settings.banner_gradient_start }}{% else %}#4F46E5{% endif %}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>{% if title %}{{ title }} | {% endif %}{% if settings %}{{ settings.site_title }}{% else %}Portfolio{% endif %}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Dynamic CSS Variables -->
+    <style>
+        :root {
+            --banner-gradient-start: {% if settings and settings.banner_gradient_start %}{{ settings.banner_gradient_start }}{% else %}#4F46E5{% endif %};
+            --banner-gradient-end: {% if settings and settings.banner_gradient_end %}{{ settings.banner_gradient_end }}{% else %}#3B82F6{% endif %};
+            --hero-text-color: {% if settings and settings.hero_text_color %}{{ settings.hero_text_color }}{% else %}#ffffff{% endif %};
+            --link-hover-color: {% if settings and settings.link_hover_color %}{{ settings.link_hover_color }}{% else %}#4f46e5{% endif %};
+            --button-hover-color: {% if settings and settings.button_hover_color %}{{ settings.button_hover_color }}{% else %}#3b82f6{% endif %};
+        }
+    </style>
+
+    <!-- External Stylesheets - Modular CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-mode.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+
+    {% block head %}{% endblock %}
+</head>
+<body> 
+    <header> 
+        <div class="container"> 
+            <nav class="navbar"> 
+                <div class="navbar-brand"> 
+                    <a href="{{ url_for('home') }}" class="brand-wrapper"> 
+                        <i class="fas fa-home"></i>
+                        {% if settings and settings.logo_url %} 
+                            <img src="{{ settings.logo_url }}" alt="Logo" class="brand-logo"> 
+                        {% endif %} 
+                        <span class="brand-name">{{ settings.brand_name if settings and settings.brand_name else 'Portfolio' }}</span> 
+                    </a> 
+                </div>
+
+                <button class="mobile-toggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                
+                <div class="navbar-links">
+                    <a href="{{ url_for('projects') }}" class="navbar-link {% if request.path == url_for('projects') %}active{% endif %}">Work</a>
+                    <a href="{{ url_for('about') }}" class="navbar-link {% if request.path == url_for('about') %}active{% endif %}">About</a>
+                    <a href="{{ url_for('contact') }}" class="navbar-link {% if request.path == url_for('contact') %}active{% endif %}">Contact</a>
+                    
+                    <button class="theme-toggle" aria-label="Toggle dark mode">
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container flash-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="footer-name">{{ settings.brand_name if settings and settings.brand_name else 'Portfolio' }}</div>
+                    <div class="footer-contact">
+                        <a href="{{ url_for('contact') }}" class="footer-contact-link">Contact Me</a>
+                    </div>
+                </div>
+                
+                <div class="footer-social">
+                    {% if settings and settings.linkedin_active and settings.linkedin_url %}
+                    <a href="{{ settings.linkedin_url }}" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="footer-copyright">
+                <p>&copy; {{ current_year }} Neil Doshi Site created with Flask.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- External JavaScript Files -->
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mobile-menu.js') }}"></script>
+
+    {% if request.endpoint and request.endpoint.startswith('admin') or
+       request.endpoint in ['dashboard', 'add_project', 'edit_project', 'profile', 'admin_settings'] %}
+    <!-- Admin JavaScript - Only load on admin pages -->
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    {% endif %}
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

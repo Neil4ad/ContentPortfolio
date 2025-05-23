@@ -1,0 +1,118 @@
+/* Mobile-specific enhancements for better responsiveness */
+
+/* Small adjustments for smaller screens */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+    
+    .hero-about {
+        font-size: 1rem;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+    }
+}
+
+/* Improved mobile menu */
+@media (max-width: 768px) {
+    .mobile-toggle {
+        display: block;
+        z-index: 10;
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+    
+    .navbar-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--bg-color);
+        border-radius: 0 0 var(--radius-md) var(--radius-md);
+        box-shadow: var(--shadow-md);
+        padding: 1rem;
+        z-index: 20;
+        flex-direction: column;
+        gap: 1rem;
+        display: none;
+    }
+    
+    .navbar-links.active {
+        display: flex;
+    }
+    
+    .theme-toggle {
+        margin-left: 0;
+    }
+}
+
+/* Touch friendly buttons and interactions */
+@media (max-width: 768px) {
+    .btn, 
+    .navbar-link, 
+    .work-card-link, 
+    .project-card-link {
+        padding: 0.625rem 0.75rem;
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .work-card, 
+    .project-card {
+        /* Add a bit more space between cards on mobile */
+        margin-bottom: 1rem;
+    }
+}
+
+/* Enhance accessibility of theme toggle on mobile */
+@media (max-width: 768px) {
+    .theme-toggle {
+        height: 44px;
+        width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .sun-icon, .moon-icon {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+/* Adjust footer spacing on mobile */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+    }
+    
+    .footer-social {
+        justify-content: center;
+        margin-left: 0;
+    }
+}
+
+/* Optimize form inputs for mobile */
+@media (max-width: 768px) {
+    input, 
+    textarea, 
+    select, 
+    .form-control {
+        font-size: 16px; /* Prevents iOS zoom on focus */
+        padding: 0.75rem 1rem;
+    }
+}

@@ -1,0 +1,705 @@
+/* 
+ * admin-optimized.css - Production-ready admin styles (Bootstrap companion)
+ * Portfolio Website - Optimized for PythonAnywhere deployment
+ * Size: ~6KB (down from 39KB) - Only custom admin components
+ */
+
+/* ==================
+   ADMIN CSS VARIABLES
+   ================== */
+
+:root {
+    /* Admin Layout */
+    --sidebar-width: 250px;
+    --header-height: 60px;
+    
+    /* Admin Colors - Light Theme (Bootstrap compatible) */
+    --admin-body-bg: #f5f8fa;
+    --admin-card-bg: #ffffff;
+    --admin-text-color: #374151;
+    --admin-border-color: #e5e7eb;
+    --admin-sidebar-bg: #ffffff;
+    --admin-header-bg: #ffffff;
+    
+    /* Admin Shadows */
+    --admin-shadow-sm: 0 .125rem .25rem rgba(0,0,0,.075);
+    --admin-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+/* Dark Mode Variables */
+[data-theme="dark"] {
+    --admin-body-bg: #111827;
+    --admin-card-bg: #1f2937;
+    --admin-text-color: #f3f4f6;
+    --admin-border-color: #374151;
+    --admin-sidebar-bg: #1f2937;
+    --admin-header-bg: #1f2937;
+}
+
+/* ==================
+   ADMIN BASE LAYOUT
+   ================== */
+
+body {
+    background-color: var(--admin-body-bg) !important;
+    color: var(--admin-text-color) !important;
+    padding-left: var(--sidebar-width);
+    min-height: 100vh;
+    transition: all 0.15s ease-in-out;
+}
+
+/* ==================
+   ADMIN SIDEBAR
+   ================== */
+
+.admin-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background-color: var(--admin-sidebar-bg);
+    border-right: 1px solid var(--admin-border-color);
+    overflow-y: auto;
+    transition: all 0.15s ease-in-out;
+    box-shadow: var(--admin-shadow-sm);
+}
+
+.admin-brand {
+    height: var(--header-height);
+    padding: 1rem 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--bs-primary, #0d6efd);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--admin-border-color);
+    background-color: var(--admin-sidebar-bg);
+}
+
+.admin-nav {
+    padding: 1rem 0;
+}
+
+.admin-nav a {
+    display: flex;
+    align-items: center;
+    padding: .75rem 1.5rem;
+    color: var(--admin-text-color);
+    text-decoration: none;
+    font-weight: 400;
+    border-left: 3px solid transparent;
+    transition: all 0.15s ease-in-out;
+}
+
+.admin-nav a i {
+    margin-right: .75rem;
+    width: 1rem;
+    text-align: center;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active {
+    color: var(--bs-primary, #0d6efd);
+    background-color: rgba(13, 110, 253, 0.1);
+    border-left-color: var(--bs-primary, #0d6efd);
+}
+
+.unread-badge {
+    background-color: var(--bs-danger, #dc3545);
+    color: white;
+    border-radius: 50%;
+    padding: .25em .4em;
+    font-size: .75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    margin-left: auto;
+    min-width: 1.5em;
+}
+
+/* ==================
+   ADMIN HEADER
+   ================== */
+
+.admin-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: var(--sidebar-width);
+    z-index: 1020;
+    height: var(--header-height);
+    padding: 0 1.5rem;
+    background-color: var(--admin-header-bg);
+    border-bottom: 1px solid var(--admin-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.15s ease-in-out;
+    box-shadow: var(--admin-shadow-sm);
+}
+
+.admin-header .title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--admin-text-color);
+}
+
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: var(--admin-text-color);
+    cursor: pointer;
+    padding: .25rem .5rem;
+    border-radius: .25rem;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.mobile-toggle:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* ==================
+   ADMIN CONTENT
+   ================== */
+
+.admin-content {
+    padding: calc(var(--header-height) + 1.5rem) 1.5rem 1.5rem;
+    min-height: calc(100vh - var(--header-height));
+}
+
+/* ==================
+   ADMIN SPECIFIC COMPONENTS
+   ================== */
+
+.admin-card {
+    background-color: var(--admin-card-bg);
+    border: 1px solid var(--admin-border-color);
+    border-radius: .375rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    box-shadow: var(--admin-shadow-sm);
+    color: var(--admin-text-color);
+}
+
+.admin-card-title {
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--admin-text-color);
+}
+
+/* Stats Cards */
+.stats-card {
+    background-color: var(--admin-card-bg);
+    border: 1px solid var(--admin-border-color);
+    border-radius: .375rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    transition: transform 0.15s ease-in-out;
+    box-shadow: var(--admin-shadow-sm);
+    color: var(--admin-text-color);
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--admin-shadow);
+}
+
+.stats-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: .375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.stats-icon.purple { background-color: #6f42c1; }
+.stats-icon.blue { background-color: var(--bs-primary, #0d6efd); }
+.stats-icon.orange { background-color: #fd7e14; }
+.stats-icon.green { background-color: var(--bs-success, #198754); }
+
+.stats-data {
+    flex: 1;
+}
+
+.stats-value {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--admin-text-color);
+    line-height: 1;
+}
+
+.stats-label {
+    color: var(--bs-secondary, #6c757d);
+    margin: 0;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* ==================
+   MESSAGES COMPONENT
+   ================== */
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.message-item {
+    padding: 1rem;
+    border-bottom: 1px solid var(--admin-border-color);
+    transition: background-color 0.15s ease-in-out;
+    background-color: var(--admin-card-bg);
+}
+
+.message-item:hover {
+    background-color: rgba(0,0,0,0.02);
+}
+
+[data-theme="dark"] .message-item:hover {
+    background-color: var(--admin-border-color);
+}
+
+.message-item:last-child {
+    border-bottom: none;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.message-sender {
+    font-weight: 600;
+    color: var(--admin-text-color);
+}
+
+.message-date {
+    color: var(--bs-secondary, #6c757d);
+    font-size: 0.875rem;
+}
+
+.message-email {
+    color: var(--bs-primary, #0d6efd);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.message-email a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.message-email a:hover {
+    text-decoration: underline;
+}
+
+.message-content {
+    color: var(--admin-text-color);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+}
+
+/* ==================
+   FORM SECTIONS
+   ================== */
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--admin-border-color);
+    color: var(--admin-text-color);
+    font-size: 1.125rem;
+}
+
+/* ==================
+   BOOTSTRAP OVERRIDES FOR DARK MODE
+   ================== */
+
+/* Cards */
+[data-theme="dark"] .card {
+    background-color: var(--admin-card-bg) !important;
+    border-color: var(--admin-border-color) !important;
+    color: var(--admin-text-color) !important;
+}
+
+[data-theme="dark"] .card-header {
+    background-color: var(--admin-border-color) !important;
+    border-color: var(--admin-border-color) !important;
+    color: var(--admin-text-color) !important;
+}
+
+/* Forms */
+[data-theme="dark"] .form-control {
+    background-color: var(--admin-border-color) !important;
+    border-color: var(--admin-border-color) !important;
+    color: var(--admin-text-color) !important;
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: var(--admin-border-color) !important;
+    border-color: #86b7fe !important;
+    color: var(--admin-text-color) !important;
+}
+
+[data-theme="dark"] .form-label {
+    color: var(--admin-text-color) !important;
+}
+
+[data-theme="dark"] .form-check-label {
+    color: var(--admin-text-color) !important;
+}
+
+/* Tables */
+[data-theme="dark"] .table {
+    color: var(--admin-text-color) !important;
+    border-color: var(--admin-border-color) !important;
+}
+
+[data-theme="dark"] .table > :not(caption) > * > * {
+    background-color: var(--admin-card-bg) !important;
+    border-bottom-color: var(--admin-border-color) !important;
+}
+
+[data-theme="dark"] .table > thead {
+    background-color: var(--admin-border-color) !important;
+}
+
+[data-theme="dark"] .table tbody tr:hover {
+    background-color: var(--admin-border-color) !important;
+}
+
+/* Alerts - Dark Mode Adjustments */
+[data-theme="dark"] .alert-success {
+    background-color: rgba(25, 135, 84, 0.15) !important;
+    color: #86efac !important;
+    border-color: rgba(25, 135, 84, 0.3) !important;
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: rgba(220, 53, 69, 0.15) !important;
+    color: #fca5a5 !important;
+    border-color: rgba(220, 53, 69, 0.3) !important;
+}
+
+[data-theme="dark"] .alert-warning {
+    background-color: rgba(255, 193, 7, 0.15) !important;
+    color: #fcd34d !important;
+    border-color: rgba(255, 193, 7, 0.3) !important;
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: rgba(13, 202, 240, 0.15) !important;
+    color: #93c5fd !important;
+    border-color: rgba(13, 202, 240, 0.3) !important;
+}
+
+/* Tabs */
+[data-theme="dark"] .nav-tabs {
+    border-bottom-color: var(--admin-border-color) !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link {
+    color: var(--admin-text-color) !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link:hover {
+    border-color: var(--admin-border-color) !important;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link.active {
+    background-color: var(--admin-card-bg) !important;
+    border-color: var(--admin-border-color) var(--admin-border-color) var(--admin-card-bg) !important;
+    color: var(--admin-text-color) !important;
+}
+
+/* List Groups */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--admin-card-bg) !important;
+    border-color: var(--admin-border-color) !important;
+    color: var(--admin-text-color) !important;
+}
+
+[data-theme="dark"] .list-group-item:hover {
+    background-color: var(--admin-border-color) !important;
+}
+
+/* ==================
+   RESPONSIVE DESIGN
+   ================== */
+
+@media (max-width: 767.98px) {
+    body {
+        padding-left: 0;
+    }
+    
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    
+    .admin-sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .admin-header {
+        left: 0;
+        padding-left: 60px;
+    }
+    
+    .mobile-toggle {
+        display: block;
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .stats-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .stats-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .message-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .admin-content {
+        padding: calc(var(--header-height) + 1rem) 1rem 1rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .admin-content {
+        padding: calc(var(--header-height) + 0.75rem) 0.75rem 0.75rem;
+    }
+    
+    .stats-card {
+        padding: 1rem;
+    }
+    
+    .message-item {
+        padding: 0.75rem;
+    }
+}
+
+/* ==================
+   UTILITY ADDITIONS
+   ================== */
+
+.h5 {
+    font-size: 1.125rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.h6 {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.delete-confirm {
+    cursor: pointer;
+}
+
+/* Thumbnail previews */
+.thumbnail-preview {
+    margin-top: 0.5rem;
+}
+
+.thumbnail-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: .375rem;
+    border: 1px solid var(--admin-border-color);
+}
+
+/* ==================
+   PRINT STYLES
+   ================== */
+
+@media print {
+    .admin-sidebar,
+    .admin-header,
+    .mobile-toggle,
+    .btn,
+    .alert {
+        display: none !important;
+    }
+    
+    body {
+        padding-left: 0;
+        background: white !important;
+        color: black !important;
+    }
+    
+    .admin-content {
+        padding: 1rem;
+    }
+    
+    .admin-card,
+    .stats-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
+
+/* 
+ * ADMIN PREVIEW IMAGE FIX
+ * Add this to the bottom of your admin.css file
+ */
+
+/* ==================
+   ADMIN PREVIEW CONTENT CONTROL
+   ================== */
+
+/* Control image sizes in admin preview */
+.admin-content img {
+    max-width: 100%;
+    max-height: 300px; /* Limit height to 300px */
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    border-radius: .375rem;
+    border: 1px solid var(--admin-border-color);
+    margin: 1rem 0;
+    display: block;
+}
+
+/* For project preview specifically */
+.admin-content .project-image,
+.admin-content .card-image,
+.admin-content .work-card-image,
+.admin-content .project-card-image {
+    max-height: 250px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: .375rem;
+    border: 1px solid var(--admin-border-color);
+    margin-bottom: 1rem;
+}
+
+/* Project preview layout improvements */
+.admin-content .project-preview,
+.admin-content .project-content {
+    max-width: 800px; /* Constrain width for better readability */
+}
+
+.admin-content .project-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 1rem 0;
+    color: var(--admin-text-color);
+}
+
+.admin-content .project-description {
+    line-height: 1.6;
+    color: var(--admin-text-color);
+    margin-bottom: 1.5rem;
+}
+
+.admin-content .project-meta {
+    background-color: var(--admin-border-color);
+    padding: 1rem;
+    border-radius: .375rem;
+    margin: 1rem 0;
+}
+
+/* Category pills in admin preview */
+.admin-content .pill--category,
+.admin-content .project-category,
+.admin-content .work-card-category {
+    display: inline-block;
+    background-color: #e5e7eb;
+    color: #4b5563;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: auto;
+    max-width: fit-content;
+}
+
+/* Dark mode adjustments for admin preview */
+[data-theme="dark"] .admin-content .pill--category,
+[data-theme="dark"] .admin-content .project-category,
+[data-theme="dark"] .admin-content .work-card-category {
+    background-color: #4b5563;
+    color: #d1d5db;
+}
+
+/* Responsive adjustments for admin preview */
+@media (max-width: 767.98px) {
+    .admin-content img {
+        max-height: 200px; /* Smaller on mobile */
+    }
+    
+    .admin-content .project-image,
+    .admin-content .card-image,
+    .admin-content .work-card-image,
+    .admin-content .project-card-image {
+        max-height: 180px;
+    }
+}
+
+/* ==================
+   ADMIN FORM IMAGE PREVIEWS
+   ================== */
+
+/* Image upload previews in forms */
+.admin-content .thumbnail-preview img {
+    max-width: 200px;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: .375rem;
+    border: 1px solid var(--admin-border-color);
+    margin-top: 0.5rem;
+}
+
+/* Multiple image previews */
+.admin-content .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.admin-content .image-gallery img {
+    max-height: 150px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: .375rem;
+    border: 1px solid var(--admin-border-color);
+}

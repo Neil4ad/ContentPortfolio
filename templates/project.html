@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="project-detail container">
+    <div class="back-button-container">
+        <a href="{{ url_for('projects') }}" class="btn btn-secondary fade-in">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to All Projects
+        </a>
+    </div>
+    
+
+    
+    <div class="project-detail-two-columns">
+        <div class="project-detail-left-column fade-in">
+            <h1 class="project-title">{{ project.title }}</h1>
+
+            <div class="project-meta">
+                {% if project.category %}
+                <div class="project-meta-item">
+                    <span class="project-meta-label">Category</span>
+                    <span class="project-meta-value">{{ project.category }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="project-meta-item">
+                    <span class="project-meta-label">Date</span>
+                    <span class="project-meta-value">{{ project.date_added.strftime('%B %d, %Y') if project.date_added else 'Unknown' }}</span>
+                </div>
+                
+                {% if project.company %}
+                <div class="project-meta-item">
+                    <span class="project-meta-label">Client/Company</span>
+                    <span class="project-meta-value">{{ project.company }}</span>
+                </div>
+                {% endif %}
+                
+                {% if project.tools_used %}
+                <div class="project-meta-item">
+                    <span class="project-meta-label">Tools Used</span>
+                    <span class="project-meta-value">{{ project.tools_used }}</span>
+                </div>
+                {% endif %}
+                
+                {% if project.is_external and project.external_url %}
+                <div class="project-meta-item">
+                    <span class="project-meta-label">Project Link</span>
+                    <span class="project-meta-value">
+                        <a href="{{ project.external_url }}" target="_blank" rel="noopener noreferrer" class="external-link">
+                            View Live Project
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </a>
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- FLEXIBLE PROJECT DESCRIPTION SECTION -->
+            <div class="project-description">
+                {% if project.is_external and project.description %}
+                    <!-- For external projects, use description field with smart markdown detection -->
+                    {% if project.description and ('**' in project.description or '*' in project.description or '#' in project.description or '[' in project.description) %}
+                        <!-- Looks like markdown, render it -->
+                        {{ project.description|markdown|safe }}
+                    {% else %}
+                        <!-- Plain text, preserve line breaks -->
+                        <div style="white-space: pre-wrap;">{{ project.description }}</div>
+                    {% endif %}
+                {% elif not project.is_external and project.internal_content %}
+                    <!-- For internal projects, use internal_content (always markdown) -->
+                    {{ project.internal_content|markdown|safe }}
+                {% elif project.description %}
+                    <!-- Fallback to description field if internal_content is empty -->
+                    {% if project.description and ('**' in project.description or '*' in project.description or '#' in project.description or '[' in project.description) %}
+                        {{ project.description|markdown|safe }}
+                    {% else %}
+                        <div style="white-space: pre-wrap;">{{ project.description }}</div>
+                    {% endif %}
+                {% else %}
+                    <p><em>No description available.</em></p>
+                {% endif %}
+            </div>
+            
+            {% if project.results %}
+            <div class="project-section">
+                <h2 class="project-section-title">Results</h2>
+                <div class="project-results">
+                    {{ project.results|markdown|safe }}
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="project-actions">
+                {% if project.resource_url %}
+                <a href="{{ project.resource_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                    {{ project.resource_text if project.resource_text else "View Resource" }}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="project-detail-right-column fade-in">
+            {% if project.thumbnail_url %}
+            <div class="project-image-container">
+                <img src="{{ project.thumbnail_url }}" alt="{{ project.title }}" class="project-detail-image">
+                
+                {% if project.is_external and project.external_url %}
+                <a href="{{ project.external_url }}" target="_blank" rel="noopener noreferrer" class="project-image-overlay">
+                    <div class="project-image-overlay-content">
+                        <div class="project-image-overlay-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1-2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </div>
+                        <div class="project-image-overlay-text">Visit Project</div>
+                    </div>
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

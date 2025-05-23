@@ -1,0 +1,92 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Import/Export Settings{% endblock %}
+{% block header_title %}Import/Export Settings{% endblock %}
+
+{% block content %}
+<div class="admin-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="admin-card-title mb-0">Import/Export Settings</h2>
+        <a href="{{ url_for('admin_settings') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to Settings
+        </a>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title h5 mb-3">Export Settings</h3>
+                    <p class="card-text">Export your current site settings to a JSON file. You can use this file to backup your settings or to transfer them to another installation.</p>
+                    
+                    <form action="{{ url_for('export_settings') }}" method="post">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-file-export"></i> Export Settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3 class="card-title h5 mb-3">Import Settings</h3>
+                    <p class="card-text">Import settings from a previously exported JSON file. This will override your current settings.</p>
+                    
+                    <form action="{{ url_for('import_settings') }}" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="settings_file" class="form-label">Settings File (JSON)</label>
+                            <input type="file" class="form-control" id="settings_file" name="settings_file" accept=".json">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-file-import"></i> Import Settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading mb-2"><i class="fas fa-exclamation-triangle"></i> Warning</h4>
+        <p>Importing settings will override your current site configuration. This cannot be undone. Make sure to export your current settings first if you want to keep them as a backup.</p>
+        <hr>
+        <p class="mb-0">Only import settings from trusted sources as it may contain malicious code.</p>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3 class="h5 mb-0">Advanced Options</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h4 class="h6">Reset to Defaults</h4>
+                    <p class="small">Reset all settings to their default values.</p>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmReset()">
+                        <i class="fas fa-undo"></i> Reset to Defaults
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <h4 class="h6">Visit Site</h4>
+                    <p class="small">See how your site looks with the current settings.</p>
+                    <a href="{{ url_for('home') }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-external-link-alt"></i> Visit Site
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmReset() {
+        if (confirm('Are you sure you want to reset all settings to default values? This cannot be undone.')) {
+            // Placeholder for reset functionality
+            alert('This feature is not yet implemented. Please contact administrator.');
+        }
+    }
+</script>
+{% endblock %}

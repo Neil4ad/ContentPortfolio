@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="works-banner">
+    <div class="container">
+        <h1 class="works-title fade-in">My Projects</h1>
+        <p class="works-subtitle fade-in">A collection of my recent work and creations</p>
+    </div>
+</div>
+
+<section class="works-section container">
+    {% if categories %}
+    <!-- Category filters -->
+    <div id="nd-filter-container" class="category-filters">
+        <button type="button" id="nd-filter-all" class="category-filter-btn nd-active" 
+                onclick="ndFilterProjects(this, 'all')">
+            All
+        </button>
+        
+        {% for category in categories %}
+            <button type="button" id="nd-filter-{{ category|lower|replace(' ', '-') }}" class="category-filter-btn" 
+                    onclick="ndFilterProjects(this, '{{ category }}')">
+                {{ category }}
+            </button>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Projects Grid -->
+    <div class="projects-grid">
+        {% for project in projects %}
+        <div class="project-card fade-in" data-category="{{ project.category }}">
+            <div class="project-card-image">
+                <img src="{{ project.thumbnail_url }}" alt="{{ project.title }}">
+                <div class="project-card-overlay">
+                    <!-- FIXED: Always link to project detail page, regardless of project type -->
+                    <a href="{{ url_for('view_project', id=project.id) }}" class="project-card-link">
+                        <span>View Details</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"></path>
+                            <path d="M12 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="project-card-content">
+                <!-- ADDED: Make the content area also clickable -->
+                <a href="{{ url_for('view_project', id=project.id) }}" class="project-content-link">
+                    <h3 class="project-card-title">{{ project.title }}</h3>
+                    <p class="project-card-description">{{ project.description|truncate_text(100) }}</p>
+                    <div class="project-card-meta">
+                        {% if project.category %}
+                        <span class="project-category">{{ project.category }}</span>
+                        {% endif %}
+                        {% if project.is_external %}
+                        <!-- Visual indicator for external projects -->
+                        <span class="project-type-indicator" title="Has external link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </span>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if not projects %}
+    <div class="no-projects">
+        <p>No projects found. Check back soon for updates!</p>
+    </div>
+    {% endif %}
+</section>
+
+<style>
+/* Ensure project content links don't have underlines and look natural */
+.project-content-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.project-content-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.project-content-link:after {
+    display: none; /* Remove the underline animation for these links */
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/category-filter.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container contact-container">
+    <h1 class="contact-title">Contact Me</h1>
+    
+    <div class="contact-card">
+        <p class="contact-intro">Feel free to reach out with any questions or project inquiries. I'll get back to you as soon as possible.</p>
+        
+        <hr class="contact-divider">
+        
+        <form method="POST" action="{{ url_for('contact') }}" class="contact-form">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                {{ form.name.label(class="form-label") }}
+                {% if form.name.errors %}
+                    {{ form.name(class="form-control is-invalid") }}
+                    <div class="form-error">
+                        {% for error in form.name.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.name(class="form-control") }}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.email.label(class="form-label") }}
+                {% if form.email.errors %}
+                    {{ form.email(class="form-control is-invalid") }}
+                    <div class="form-error">
+                        {% for error in form.email.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.email(class="form-control") }}
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.message.label(class="form-label") }}
+                {% if form.message.errors %}
+                    {{ form.message(class="form-control is-invalid", rows=6) }}
+                    <div class="form-error">
+                        {% for error in form.message.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.message(class="form-control", rows=6) }}
+                {% endif %}
+            </div>
+            
+            <div class="form-submit">
+                {{ form.submit(class="btn") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

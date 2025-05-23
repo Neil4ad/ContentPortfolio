@@ -1,0 +1,334 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Site Settings{% endblock %}
+{% block header_title %}Site Settings{% endblock %}
+
+{% block content %}
+<div class="admin-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="admin-card-title mb-0">Site Settings</h2>
+        <div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="{{ url_for('home') }}" target="_blank" class="btn btn-outline-primary btn-sm ms-2">
+                <i class="fas fa-external-link-alt"></i> Preview Site
+            </a>
+        </div>
+    </div>
+    
+    <!-- Settings Tabs -->
+    <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">
+                <i class="fas fa-cog"></i> General
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="appearance-tab" data-bs-toggle="tab" data-bs-target="#appearance" type="button" role="tab" aria-controls="appearance" aria-selected="false">
+                <i class="fas fa-palette"></i> Appearance
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="false">
+                <i class="fas fa-user"></i> About Page
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="social-tab" data-bs-toggle="tab" data-bs-target="#social" type="button" role="tab" aria-controls="social" aria-selected="false">
+                <i class="fas fa-share-alt"></i> Social Media
+            </button>
+        </li>
+    </ul>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        
+        <div class="tab-content" id="settingsTabsContent">
+            <!-- General Settings Tab -->
+            <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.site_title.label }}</label>
+                            {{ form.site_title(class="form-control") }}
+                            <div class="form-text">The main title that appears in your site header and browser tab.</div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.site_subtitle.label }}</label>
+                            {{ form.site_subtitle(class="form-control") }}
+                            <div class="form-text">A brief tagline that appears below your site title.</div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.about_short.label }}</label>
+                            {{ form.about_short(class="form-control", rows="3") }}
+                            <div class="form-text">Short introduction text that appears on your homepage.</div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.brand_name.label }}</label>
+                            {{ form.brand_name(class="form-control") }}
+                            <div class="form-text">Your name or brand name that appears in the navigation.</div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.contact_email.label }}</label>
+                            {{ form.contact_email(class="form-control") }}
+                            <div class="form-text">Email address where contact form messages will be sent.</div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.logo_url.label }}</label>
+                            {{ form.logo_url(class="form-control") }}
+                            <div class="form-text">URL to your logo image (optional).</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Preview</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="preview-section">
+                                    <div class="preview-header" style="background: linear-gradient(to right, {{ settings.banner_gradient_start or '#4F46E5' }}, {{ settings.banner_gradient_end or '#3B82F6' }}); color: white; padding: 1rem; border-radius: 0.375rem; margin-bottom: 1rem;">
+                                        <h6 class="mb-1" id="preview-title">{{ settings.site_title or 'Site Title' }}</h6>
+                                        <small id="preview-subtitle">{{ settings.site_subtitle or 'Site Subtitle' }}</small>
+                                    </div>
+                                    <p class="small text-muted" id="preview-about">{{ settings.about_short or 'About text will appear here...' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Appearance Tab -->
+            <div class="tab-pane fade" id="appearance" role="tabpanel" aria-labelledby="appearance-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="h5 mb-3">Banner Colors</h4>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.banner_gradient_start.label }}</label>
+                            {{ form.banner_gradient_start(class="form-control") }}
+                            <div class="form-text">Starting color for the banner gradient.</div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.banner_gradient_end.label }}</label>
+                            {{ form.banner_gradient_end(class="form-control") }}
+                            <div class="form-text">Ending color for the banner gradient.</div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.banner_image.label }}</label>
+                            {{ form.banner_image(class="form-control") }}
+                            <div class="form-text">Optional background image URL for the banner (overrides gradient).</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <!-- REMOVED BROKEN TEXT COLOR FIELDS -->
+                        <div class="alert alert-info" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Text Colors:</strong> Your site uses an intelligent dark/light mode system that automatically adjusts text colors for optimal readability. Text colors adapt based on user preference and background contrast.
+                        </div>
+                        
+                        <h4 class="h5 mb-3">Interactive Elements</h4>
+                        
+                        {% if form.link_hover_color %}
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.link_hover_color.label }}</label>
+                            {{ form.link_hover_color(class="form-control") }}
+                            <div class="form-text">Color for links when hovered.</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if form.button_hover_color %}
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.button_hover_color.label }}</label>
+                            {{ form.button_hover_color(class="form-control") }}
+                            <div class="form-text">Color for buttons when hovered.</div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0">Theme Preview</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-2">
+                                    <strong>Light Mode:</strong> <span class="text-dark">Dark text on light backgrounds</span>
+                                </div>
+                                <div class="p-2 bg-dark text-light rounded">
+                                    <strong>Dark Mode:</strong> Light text on dark backgrounds
+                                </div>
+                                <div class="small text-muted mt-2">
+                                    Text colors automatically adjust based on user's theme preference.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <h4 class="h5 mb-3">Default Project Settings</h4>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.default_project_thumbnail.label }}</label>
+                            {{ form.default_project_thumbnail(class="form-control") }}
+                            <div class="form-text">Default thumbnail image for projects without a specific image.</div>
+                            {% if settings.default_project_thumbnail %}
+                            <div class="mt-2">
+                                <img src="{{ settings.default_project_thumbnail }}" alt="Default thumbnail" class="img-thumbnail" style="max-width: 200px; max-height: 120px;">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- About Page Tab -->
+            <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.about_me.label }}</label>
+                            {{ form.about_me(class="summernote") }}
+                            <div class="form-text">Full content for your About page. Supports rich text formatting.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.profile_image.label }}</label>
+                            {{ form.profile_image(class="form-control") }}
+                            <div class="form-text">Upload a profile photo for your About page.</div>
+                        </div>
+                        
+                        {% if settings.profile_image %}
+                        <div class="mb-3">
+                            <label class="form-label">Current Profile Image</label>
+                            <div>
+                                <img src="{{ settings.profile_image }}" alt="Profile" class="img-thumbnail" style="max-width: 100%; max-height: 300px;">
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0">Quick Actions</h6>
+                            </div>
+                            <div class="card-body">
+                                <a href="{{ url_for('about') }}" target="_blank" class="btn btn-outline-primary btn-sm w-100 mb-2">
+                                    <i class="fas fa-external-link-alt"></i> Preview About Page
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Media Tab -->
+            <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="social-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="h5 mb-3">LinkedIn</h4>
+                        
+                        <div class="form-group mb-3">
+                            <div class="form-check form-switch">
+                                {{ form.linkedin_active(class="form-check-input") }}
+                                <label class="form-check-label">{{ form.linkedin_active.label }}</label>
+                            </div>
+                            <div class="form-text">Show LinkedIn link in your site footer.</div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.linkedin_url.label }}</label>
+                            {{ form.linkedin_url(class="form-control") }}
+                            <div class="form-text">Your LinkedIn profile URL.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0">Social Media Preview</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="fab fa-linkedin fa-2x text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-medium">LinkedIn</div>
+                                        <div class="small text-muted">
+                                            {% if settings.linkedin_active and settings.linkedin_url %}
+                                                <span class="text-success">Active</span> - <a href="{{ settings.linkedin_url }}" target="_blank">{{ settings.linkedin_url }}</a>
+                                            {% else %}
+                                                <span class="text-muted">Not configured</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="fas fa-info-circle"></i> <strong>Note:</strong> Additional social media platforms can be added in future updates. Currently, LinkedIn is supported.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Actions -->
+        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+            <div>
+                <a href="{{ url_for('import_settings') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-file-import"></i> Import/Export
+                </a>
+            </div>
+            <div>
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Real-time preview updates
+    $(document).ready(function() {
+        // Update preview when typing
+        $('#site_title').on('input', function() {
+            $('#preview-title').text($(this).val() || 'Site Title');
+        });
+        
+        $('#site_subtitle').on('input', function() {
+            $('#preview-subtitle').text($(this).val() || 'Site Subtitle');
+        });
+        
+        $('#about_short').on('input', function() {
+            $('#preview-about').text($(this).val() || 'About text will appear here...');
+        });
+        
+        // Color picker updates
+        $('#banner_gradient_start, #banner_gradient_end').on('input', function() {
+            const startColor = $('#banner_gradient_start').val() || '#4F46E5';
+            const endColor = $('#banner_gradient_end').val() || '#3B82F6';
+            $('.preview-header').css('background', `linear-gradient(to right, ${startColor}, ${endColor})`);
+        });
+    });
+</script>
+{% endblock %}

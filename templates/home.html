@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Banner -->
+<section class="hero-banner {% if not settings.banner_image %}hero-banner-gradient{% endif %}" 
+         {% if settings.banner_image %}style="background-image: url('{{ settings.banner_image }}');"{% endif %}>
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">{{ settings.site_title if settings and settings.site_title else "Content Designer & Strategist" }}</h1>
+            <p class="hero-subtitle">{{ settings.site_subtitle if settings and settings.site_subtitle else "Crafting clear, compelling digital experiences that engage audiences and drive results" }}</p>
+            <p class="hero-about">{{ settings.about_short if settings and settings.about_short else "I help brands communicate more effectively through strategic content design, UX writing, and messaging that connects with audiences." }}</p>
+        </div>
+    </div>
+</section>
+
+<!-- Selected Works -->
+<section class="container section-spacing">
+    <h2 class="section-title">Selected Works</h2>
+    
+    <div class="works-grid">
+        {% for project in projects %}
+            <article class="work-card">
+                {% if project.thumbnail_url %}
+                    <div class="work-card-image">
+                        <img src="{{ project.thumbnail_url }}" alt="{{ project.title }}">
+                    </div>
+                {% else %}
+                    <div class="work-card-image work-card-placeholder">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="work-card-content">
+                    <h3 class="work-card-title">{{ project.title }}</h3>
+                    <div class="work-card-category">{{ project.category }}</div>
+                    <p class="work-card-description">{{ project.description|truncate_text(150) }}</p>
+                    <a href="{{ url_for('view_project', id=project.id) }}" class="work-card-link">
+                        View Project
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </article>
+        {% else %}
+            <div class="no-projects">
+                <div class="no-projects-icon">📑</div>
+                <h3>No projects published yet</h3>
+                <p>Add your first project in the admin dashboard.</p>
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}" class="btn">Go to Admin Dashboard</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="centered-btn">
+        <a href="{{ url_for('projects') }}" class="btn">View All Work</a>
+    </div>
+</section>
+{% endblock %}

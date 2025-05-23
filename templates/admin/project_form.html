@@ -1,0 +1,328 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .form-section {
+        margin-bottom: 2rem;
+    }
+    
+    .form-section-title {
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .internal-content-fields,
+    .external-content-fields,
+    .resource-fields {
+        display: none;
+    }
+    
+    /* Preview section */
+    .preview-section {
+        margin-top: 2rem;
+    }
+    
+    .preview-card {
+        background-color: var(--card-bg);
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .preview-image {
+        height: auto;
+        max-height: 400px;
+        position: relative;
+        overflow: hidden;
+        background-color: #f9fafb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+    }
+    
+    .preview-image img {
+        width: 100%;
+        max-height: 400px;
+        height: auto;
+        object-fit: contain;
+    }
+    
+    .preview-content {
+        padding: 1.5rem;
+    }
+    
+    .preview-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+    
+    .preview-category {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        border-radius: 0.25rem;
+        background-color: #f3f4f6;
+        margin-top: 1rem;
+    }
+    
+    /* Fade inactive tab content */
+    .tab-pane.fade {
+        opacity: 0;
+        transition: opacity 0.15s linear;
+    }
+    
+    .tab-pane.fade.show {
+        opacity: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="admin-card-title mb-0">{{ title }}</h2>
+        <div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to Projects
+            </a>
+            {% if project %}
+            <a href="{{ url_for('view_project', id=project.id) }}" target="_blank" class="btn btn-outline-primary btn-sm ms-2">
+                <i class="fas fa-external-link-alt"></i> View Project
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <ul class="nav nav-tabs mb-4" id="projectTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic" type="button" role="tab" aria-controls="basic" aria-selected="true">Basic Info</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="false">Content</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="resources-tab" data-bs-toggle="tab" data-bs-target="#resources" type="button" role="tab" aria-controls="resources" aria-selected="false">Resources</button>
+        </li>
+        {% if project %}
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="preview-tab" data-bs-toggle="tab" data-bs-target="#preview" type="button" role="tab" aria-controls="preview" aria-selected="false">Preview</button>
+        </li>
+        {% endif %}
+    </ul>
+    
+    <form method="post" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        
+        <div class="tab-content" id="projectTabsContent">
+            <!-- Basic Info Tab -->
+            <div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="form-group mb-3">
+                                <label class="form-label">{{ form.title.label }}</label>
+                                {{ form.title(class="form-control") }}
+                                <div class="form-text">Title of your project.</div>
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label class="form-label">{{ form.description.label }}</label>
+                                {{ form.description(class="form-control", rows="4") }}
+                                <div class="form-text">A short description of your project (max 500 characters).</div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">{{ form.category.label }}</label>
+                                        {{ form.category(class="form-control") }}
+                                        <div class="form-text">Category helps to organize and filter projects.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">{{ form.company.label }}</label>
+                                        {{ form.company(class="form-control") }}
+                                        <div class="form-text">Company or client for this project (if applicable).</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label class="form-label">{{ form.tools_used.label }}</label>
+                                {{ form.tools_used(class="form-control") }}
+                                <div class="form-text">List of tools, technologies, or skills used in this project.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-5">
+                            <div class="form-group mb-3">
+                                <label class="form-label">{{ form.thumbnail_url.label }}</label>
+                                {{ form.thumbnail_url(class="form-control") }}
+                                <div class="form-text">URL to an image for this project. Leave empty to upload directly.</div>
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <label class="form-label">{{ form.thumbnail_upload.label }}</label>
+                                {{ form.thumbnail_upload(class="form-control") }}
+                                <div class="form-text">Upload an image for this project (JPG, PNG, GIF).</div>
+                            </div>
+                            
+                            {% if project and project.thumbnail_url %}
+                            <div class="mb-3">
+                                <label class="form-label">Current Thumbnail</label>
+                                <div>
+                                    <img src="{{ project.thumbnail_url }}" alt="{{ project.title }}" class="img-thumbnail" style="max-height: 150px;">
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    {{ form.featured(class="form-check-input") }}
+                                    <label class="form-check-label">{{ form.featured.label }}</label>
+                                </div>
+                                <div class="form-text">Featured projects appear on the homepage and are highlighted in the projects list.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Tab -->
+            <div class="tab-pane fade" id="content" role="tabpanel" aria-labelledby="content-tab">
+                <div class="form-section">
+                    <h3 class="form-section-title">Project Type</h3>
+                    
+                    <div class="form-check mb-3">
+                        {{ form.is_external(class="form-check-input", id="is_external") }}
+                        <label class="form-check-label" for="is_external">{{ form.is_external.label }}</label>
+                        <div class="form-text">Choose whether this project links to an external website or has internal content.</div>
+                    </div>
+                    
+                    <div class="external-content-fields">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.external_url.label }}</label>
+                            {{ form.external_url(class="form-control") }}
+                            <div class="form-text">URL to the external website for this project.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="internal-content-fields">
+                        <div class="form-group mb-3">
+                            <label class="form-label">{{ form.internal_content.label }}</label>
+                            {{ form.internal_content(class="summernote") }}
+                            <div class="form-text">Detailed content for the project page. Supports Markdown or HTML.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3 class="form-section-title">Results</h3>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">{{ form.results.label }}</label>
+                        {{ form.results(class="form-control", rows="4") }}
+                        <div class="form-text">Describe the outcomes, impact, or metrics of this project.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resources Tab -->
+            <div class="tab-pane fade" id="resources" role="tabpanel" aria-labelledby="resources-tab">
+                <div class="form-section">
+                    <h3 class="form-section-title">Additional Resources</h3>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle"></i> Resources are optional links to additional materials related to your project, such as PDFs, case studies, or documentation.
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">{{ form.resource_url.label }}</label>
+                        {{ form.resource_url(class="form-control") }}
+                        <div class="form-text">URL to a downloadable resource or additional information.</div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">{{ form.resource_text.label }}</label>
+                        {{ form.resource_text(class="form-control") }}
+                        <div class="form-text">Text for the resource button or link.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preview Tab (only for edit mode) - FIXED HTML STRUCTURE -->
+            {% if project %}
+            <div class="tab-pane fade" id="preview" role="tabpanel" aria-labelledby="preview-tab">
+                <div class="preview-section">
+                    <div id="project-preview-container" class="preview-card">
+                        <div class="preview-image">
+                            {% if project.thumbnail_url %}
+                            <img src="{{ project.thumbnail_url }}" alt="{{ project.title }}">
+                            {% else %}
+                            <i class="fas fa-image fa-3x"></i>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="preview-content">
+                            <h3 class="preview-title">{{ project.title }}</h3>
+                            <p>{{ project.description }}</p>
+                            
+                            {% if project.category %}
+                            <div class="preview-category">{{ project.category }}</div>
+                            {% endif %}
+                            
+                            <div class="mt-3">
+                                <a href="{{ url_for('view_project', id=project.id) }}" target="_blank" class="btn btn-primary">
+                                    <i class="fas fa-eye"></i> View Project Page
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> {{ 'Update Project' if project else 'Create Project' }}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Toggle fields based on project type
+    $(document).ready(function() {
+        // Initial state
+        toggleProjectTypeFields();
+        
+        // Handle changes
+        $('#is_external').change(function() {
+            toggleProjectTypeFields();
+        });
+        
+        function toggleProjectTypeFields() {
+            if ($('#is_external').is(':checked')) {
+                $('.external-content-fields').show();
+                $('.internal-content-fields').hide();
+            } else {
+                $('.external-content-fields').hide();
+                $('.internal-content-fields').show();
+            }
+        }
+    });
+</script>
+{% endblock %}

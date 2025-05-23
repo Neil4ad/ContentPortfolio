@@ -1,0 +1,97 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Profile Settings{% endblock %}
+{% block header_title %}Profile Settings{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="admin-card">
+            <h2 class="admin-card-title">Update Profile</h2>
+            
+            <form method="post" action="{{ url_for('profile') }}">
+                {{ update_form.csrf_token }}
+                <input type="hidden" name="update_profile" value="1">
+                
+                <div class="form-group mb-3">
+                    <label class="form-label">{{ update_form.username.label }}</label>
+                    {{ update_form.username(class="form-control") }}
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label class="form-label">{{ update_form.email.label }}</label>
+                    {{ update_form.email(class="form-control", type="email") }}
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="admin-card">
+            <h2 class="admin-card-title">Account Actions</h2>
+            
+            <div class="list-group">
+                <a href="{{ url_for('home') }}" target="_blank" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-external-link-alt"></i> Visit Site</span>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                <a href="{{ url_for('logout') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-sign-out-alt"></i> Logout</span>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="admin-card">
+            <h2 class="admin-card-title">Change Password</h2>
+            
+            <form method="post" action="{{ url_for('profile') }}">
+                {{ password_form.csrf_token }}
+                <input type="hidden" name="change_password" value="1">
+                
+                <div class="form-group mb-3">
+                    <label class="form-label">{{ password_form.current_password.label }}</label>
+                    {{ password_form.current_password(class="form-control") }}
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label class="form-label">{{ password_form.new_password.label }}</label>
+                    {{ password_form.new_password(class="form-control") }}
+                    <div class="form-text">
+                        Password should be at least 8 characters long and include a mix of letters, numbers, and symbols.
+                    </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label class="form-label">{{ password_form.confirm_password.label }}</label>
+                    {{ password_form.confirm_password(class="form-control") }}
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-key"></i> Change Password
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="admin-card">
+            <h2 class="admin-card-title">Security Tips</h2>
+            
+            <ul class="mb-0">
+                <li class="mb-2">Use a strong, unique password that you don't use for other websites.</li>
+                <li class="mb-2">Include uppercase letters, lowercase letters, numbers, and symbols in your password.</li>
+                <li class="mb-2">Avoid using personal information in your password that could be easily guessed.</li>
+                <li class="mb-2">Change your password regularly, especially if you suspect any unauthorized access.</li>
+                <li>Keep your email address up to date to receive important notifications.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

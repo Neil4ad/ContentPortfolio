@@ -1,0 +1,122 @@
+/* 
+ * responsive.css - Comprehensive responsive design and mobile optimizations
+ * Portfolio Website CSS Refactor - Optimized Version
+ */
+
+/* ==================
+   RESPONSIVE BREAKPOINTS
+   ================== */
+
+/* Large Desktop: 1200px and up */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1200px;
+    }
+    
+    .works-grid,
+    .projects-grid {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+    
+    .hero-title,
+    .works-title,
+    .about-title {
+        font-size: 3.5rem;
+    }
+}
+
+/* Desktop: 992px to 1199px */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .hero-title,
+    .works-title,
+    .about-title {
+        font-size: 3rem;
+    }
+    
+    .hero-subtitle,
+    .works-subtitle {
+        font-size: 1.375rem;
+    }
+}
+
+/* Tablet Landscape: 768px to 991px */
+@media (max-width: 991px) and (min-width: 768px) {
+    .container {
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
+    }
+    
+    .project-detail-two-columns,
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+    }
+    
+    .project-detail-right-column,
+    .about-image {
+        order: -1;
+        position: relative;
+        top: auto;
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .project-detail-left-column,
+    .about-content {
+        padding-right: 0;
+    }
+    
+    .project-meta {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .works-grid,
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+}
+
+/* Tablet Portrait and Small Laptop: 576px to 767px */
+@media (max-width: 767px) and (min-width: 576px) {
+    /* Navigation Changes */
+    .mobile-toggle {
+        display: block;
+    }
+    
+    .navbar-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        padding: var(--spacing-md);
+        z-index: var(--z-dropdown);
+        flex-direction: column;
+        gap: var(--spacing-md);
+        display: none;
+    }
+    
+    .navbar-links.active {
+        display: flex;
+    }
+    
+    /* Typography Adjustments */
+    .hero-title,
+    .works-title,
+    .about-title {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .hero-subtitle,
+    .works-subtitle {
+        font-size: var(--font-size-lg);
+    }
+    
+    .hero-about {
+        font-size: var(--font-size-base);
+    }
+    
+}

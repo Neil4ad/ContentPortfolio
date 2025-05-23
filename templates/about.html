@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="about-banner">
+    <div class="container">
+        <h1 class="about-title fade-in">About Me</h1>
+    </div>
+</div>
+
+<section class="about-section container">
+    <div class="about-grid">
+        <div class="about-content fade-in">
+            {% if settings.about_me %}
+                {{ settings.about_me|markdown|safe }}
+            {% else %}
+                <h2>Hello, I'm {{ settings.brand_name }}</h2>
+                <p>Welcome to my portfolio website. I'm passionate about creating compelling, user-centered content and designs that communicate effectively and drive results.</p>
+                <p>This is a placeholder for your about page content. You can update this in the admin settings.</p>
+            {% endif %}
+        </div>
+        
+        <div class="about-image fade-in">
+            {% if settings.profile_image %}
+                <img src="{{ settings.profile_image }}" alt="{{ settings.brand_name }}" class="profile-image">
+            {% else %}
+                <div class="profile-placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5.52 19c.64-2.2 1.84-3 3.22-3h6.52c1.38 0 2.58.8 3.22 3"/>
+                        <circle cx="12" cy="10" r="3"/>
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <p>Profile Image</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
