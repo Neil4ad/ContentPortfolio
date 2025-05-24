@@ -82,12 +82,6 @@
     --z-modal: 1050;
     --z-tooltip: 1070;
     
-    /* Missing Variables for Compatibility */
-    --banner-gradient-start: #667eea;
-    --banner-gradient-end: #764ba2;
-    --hero-text-color: white;
-    --link-hover-color: var(--accent-color);
-    --button-hover-color: var(--accent-color);
 }
 
 /* Reset and Base Styles */
