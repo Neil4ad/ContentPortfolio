@@ -16,16 +16,7 @@
     
     <!-- Custom Admin CSS (Optimized - 6KB) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
-    
-    <!-- Dynamic CSS Variables from Settings -->
-    <style>
-        :root {
-            --bs-primary: {{ settings.banner_gradient_start or '#4F46E5' }};
-            --primary-color: {{ settings.banner_gradient_start or '#4F46E5' }};
-            --secondary-color: {{ settings.banner_gradient_end or '#3B82F6' }};
-            --accent-color: {{ settings.link_hover_color or '#4f46e5' }};
-        }
-    </style>
+
     
     {% block extra_styles %}{% endblock %}
 </head>

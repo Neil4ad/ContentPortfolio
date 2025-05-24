@@ -562,7 +562,7 @@ textarea.form-control {
 }
 
 .navbar-link:hover {
-    color: var(--primary-color);
+    color: var(--link-hover-color);
 }
 
 .navbar-link:after {
@@ -572,7 +572,7 @@ textarea.form-control {
     height: 2px;
     bottom: -4px;
     left: 0;
-    background-color: var(--primary-color);
+    background-color: var(--link-hover-color);
     transition: width var(--transition-speed) var(--transition-ease);
 }
 
@@ -581,12 +581,12 @@ textarea.form-control {
 }
 
 .navbar-link.active {
-    color: var(--accent-color);
+    color: var(--link-hover-color);
 }
 
 .navbar-link.active:after {
     width: 100%;
-    background-color: var(--accent-color);
+    background-color: var(--link-hover-color);
 }
 
 /* Dark Mode */
@@ -980,7 +980,7 @@ textarea.form-control {
 }
 
 .footer-contact-link:hover {
-    color: var(--accent-color);
+    color: var(--link-hover-color);
 }
 
 .social-link {
