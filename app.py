@@ -9,8 +9,8 @@ import logging
 from flask_mail import Mail, Message as MailMessage
 
 # Import database model classes
-from models import db, User, Project, Message, SiteSettings
-from forms import LoginForm, ContactForm, ProjectForm, ChangePasswordForm, UpdateProfileForm, SiteSettingsForm
+from models import db, User, Project, Message, SiteSettings, Category
+from forms import LoginForm, ContactForm, ProjectForm, ChangePasswordForm, UpdateProfileForm, SiteSettingsForm, CategoryForm
 
 # Import configuration
 from config import config
@@ -112,12 +112,6 @@ def reading_time(text, wpm=200):
     minutes = max(1, round(words / wpm))
     return f"{minutes} min read"
 
-# Usage examples in templates:
-# {{ project.description|truncate_smart(120) }}
-# {{ project.description|truncate_sentences(1) }}
-# {{ project.description|word_count }} words
-# {{ project.description|reading_time }}
-
 # User loader for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
@@ -142,6 +136,14 @@ def initialize_db():
         )
         admin.set_password(app.config['DEFAULT_ADMIN_PASSWORD'])
         db.session.add(admin)
+        db.session.commit()
+    
+    # Create default categories if they don't exist
+    if Category.query.count() == 0:
+        default_categories = ['Article', 'Blog', 'Case Study', 'Website']
+        for cat_name in default_categories:
+            category = Category(name=cat_name, is_active=True)
+            db.session.add(category)
         db.session.commit()
 
 # Global context processor to include site settings in templates
@@ -170,7 +172,8 @@ def inject_site_settings():
 # Routes
 @app.route('/')
 def home():
-    featured_projects = Project.query.filter_by(featured=True).order_by(Project.date_added.desc()).all()
+    # UPDATED: Only show featured projects that are also visible, ordered by order_index then date
+    featured_projects = Project.query.filter_by(featured=True, is_visible=True).order_by(Project.order_index, Project.date_added.desc()).all()
     return render_template('home.html', projects=featured_projects)
 
 @app.route('/about')
@@ -223,16 +226,18 @@ def contact():
 
 @app.route('/projects')
 def projects():
-    all_projects = Project.query.order_by(Project.date_added.desc()).all()
+    # UPDATED: Only show visible projects, ordered by order_index then date
+    all_projects = Project.query.filter_by(is_visible=True).order_by(Project.order_index, Project.date_added.desc()).all()
     
-    # Get unique categories - FIXED: convert set to list for JSON serialization
-    categories = list(set(project.category for project in all_projects if project.category))
+    # Get unique categories - UPDATED: Use relationship
+    categories = list(set(project.category.name for project in all_projects if project.category))
     
     return render_template('projects.html', projects=all_projects, categories=categories)
 
 @app.route('/project/<int:id>')
 def view_project(id):
-    project = Project.query.get_or_404(id)
+    # UPDATED: Only show visible projects, or 404 if hidden
+    project = Project.query.filter_by(id=id, is_visible=True).first_or_404()
     return render_template('project.html', project=project)
 
 # Admin routes
@@ -262,21 +267,144 @@ def logout():
 @app.route('/contentadmin')
 @login_required
 def dashboard():
-    projects = Project.query.order_by(Project.date_added.desc()).all()
+    # UPDATED: Order projects by order_index for consistent admin display
+    projects = Project.query.order_by(Project.order_index, Project.date_added.desc()).all()
     projects_count = Project.query.count()
-    featured_count = Project.query.filter_by(featured=True).count()
     
-    # Convert set to list for JSON serialization
-    categories = list(set(project.category for project in projects if project.category))
+    # UPDATED: Count visible and featured projects separately
+    visible_count = Project.query.filter_by(is_visible=True).count()
+    hidden_count = Project.query.filter_by(is_visible=False).count()
+    featured_count = Project.query.filter_by(featured=True, is_visible=True).count()
+    
+    # Categories count
+    categories_count = Category.query.filter_by(is_active=True).count()
+    
+    # Convert set to list for JSON serialization - Updated to use relationship
+    categories = [project.category.name for project in projects if project.category]
+    categories = list(set(categories))
     
     return render_template(
         'admin/dashboard.html', 
         projects=projects, 
         projects_count=projects_count,
+        visible_count=visible_count,
+        hidden_count=hidden_count,
         featured_count=featured_count,
+        categories_count=categories_count,
         categories=categories,
         active_tab='dashboard'
     )
+
+# Category Management Routes
+@app.route('/contentadmin/categories')
+@login_required
+def categories():
+    categories = Category.query.order_by(Category.name).all()
+    
+    # Get project counts for each category
+    category_stats = {}
+    for category in categories:
+        category_stats[category.id] = {
+            'total_projects': len(category.projects),
+            'visible_projects': len([p for p in category.projects if p.is_visible])
+        }
+    
+    return render_template('admin/categories.html', 
+                         categories=categories, 
+                         category_stats=category_stats,
+                         active_tab='categories')
+
+@app.route('/contentadmin/categories/add', methods=['GET', 'POST'])
+@login_required
+def add_category():
+    form = CategoryForm()
+    
+    if form.validate_on_submit():
+        try:
+            category = Category(
+                name=form.name.data.strip(),
+                is_active=form.is_active.data
+            )
+            db.session.add(category)
+            db.session.commit()
+            
+            flash(f'Category "{category.name}" added successfully!', 'success')
+            return redirect(url_for('categories'))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error creating category: {str(e)}")
+            flash(f'Error creating category: {str(e)}', 'error')
+    
+    return render_template('admin/category_form.html', 
+                         form=form, 
+                         title="Add New Category",
+                         active_tab='categories')
+
+@app.route('/contentadmin/categories/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_category(id):
+    category = Category.query.get_or_404(id)
+    form = CategoryForm(obj=category, original_name=category.name)
+    
+    if form.validate_on_submit():
+        try:
+            category.name = form.name.data.strip()
+            category.is_active = form.is_active.data
+            db.session.commit()
+            
+            flash(f'Category "{category.name}" updated successfully!', 'success')
+            return redirect(url_for('categories'))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error updating category: {str(e)}")
+            flash(f'Error updating category: {str(e)}', 'error')
+    
+    return render_template('admin/category_form.html', 
+                         form=form, 
+                         category=category,
+                         title="Edit Category",
+                         active_tab='categories')
+
+@app.route('/contentadmin/categories/delete/<int:id>', methods=['POST'])
+@login_required
+def delete_category(id):
+    category = Category.query.get_or_404(id)
+    
+    # Check if category has projects
+    if category.projects:
+        flash(f'Cannot delete category "{category.name}" - it has {len(category.projects)} project(s). Move projects to another category first.', 'error')
+        return redirect(url_for('categories'))
+    
+    try:
+        category_name = category.name
+        db.session.delete(category)
+        db.session.commit()
+        
+        flash(f'Category "{category_name}" deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error deleting category: {str(e)}")
+        flash(f'Error deleting category: {str(e)}', 'error')
+    
+    return redirect(url_for('categories'))
+
+@app.route('/contentadmin/categories/toggle/<int:id>', methods=['POST'])
+@login_required
+def toggle_category(id):
+    category = Category.query.get_or_404(id)
+    
+    try:
+        category.is_active = not category.is_active
+        db.session.commit()
+        
+        status = "activated" if category.is_active else "deactivated"
+        flash(f'Category "{category.name}" {status} successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error toggling category: {str(e)}")
+        flash(f'Error updating category: {str(e)}', 'error')
+    
+    return redirect(url_for('categories'))
 
 @app.route('/contentadmin/add-project', methods=['GET', 'POST'])
 @login_required
@@ -304,8 +432,10 @@ def add_project():
                 external_url=form.external_url.data if form.is_external.data else None,
                 internal_content=form.internal_content.data if not form.is_external.data else None,
                 thumbnail_url=thumbnail_url,
-                category=form.category.data,
+                category_id=form.category_id.data,  # UPDATED: Use category_id
+                is_visible=form.is_visible.data,
                 featured=form.featured.data,
+                order_index=form.order_index.data or 0,
                 results=form.results.data,
                 # Additional fields
                 company=form.company.data,
@@ -325,7 +455,6 @@ def add_project():
             app.logger.error(f"Error creating project: {str(e)}")
             flash(f'Error creating project: {str(e)}', 'error')
     
-    # If GET request or form validation fails
     return render_template('admin/project_form.html', form=form, title="Add New Project", active_tab='works')
 
 @app.route('/contentadmin/edit-project/<int:id>', methods=['GET', 'POST'])
@@ -342,8 +471,10 @@ def edit_project(id):
             project.is_external = form.is_external.data
             project.external_url = form.external_url.data if form.is_external.data else None
             project.internal_content = form.internal_content.data if not form.is_external.data else None
-            project.category = form.category.data
+            project.category_id = form.category_id.data  # UPDATED: Use category_id
+            project.is_visible = form.is_visible.data
             project.featured = form.featured.data
+            project.order_index = form.order_index.data or 0
             project.results = form.results.data
             project.company = form.company.data
             project.tools_used = form.tools_used.data

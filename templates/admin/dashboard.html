@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="row mb-4">
-    <div class="col-md-4 mb-3">
+    <div class="col-md-3 mb-3">
         <div class="stats-card">
             <div class="stats-icon purple">
                 <i class="fas fa-briefcase"></i>
@@ -17,26 +17,38 @@
         </div>
     </div>
     
-    <div class="col-md-4 mb-3">
+    <div class="col-md-3 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon green">
+                <i class="fas fa-eye"></i>
+            </div>
+            <div class="stats-data">
+                <h3 class="stats-value">{{ visible_count }}</h3>
+                <p class="stats-label">Visible Projects</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
         <div class="stats-card">
             <div class="stats-icon blue">
                 <i class="fas fa-star"></i>
             </div>
             <div class="stats-data">
                 <h3 class="stats-value">{{ featured_count }}</h3>
-                <p class="stats-label">Featured Projects</p>
+                <p class="stats-label">Featured & Visible</p>
             </div>
         </div>
     </div>
     
-    <div class="col-md-4 mb-3">
+    <div class="col-md-3 mb-3">
         <div class="stats-card">
             <div class="stats-icon orange">
-                <i class="fas fa-layer-group"></i>
+                <i class="fas fa-eye-slash"></i>
             </div>
             <div class="stats-data">
-                <h3 class="stats-value">{{ categories|length }}</h3>
-                <p class="stats-label">Categories</p>
+                <h3 class="stats-value">{{ hidden_count }}</h3>
+                <p class="stats-label">Hidden Projects</p>
             </div>
         </div>
     </div>
@@ -58,37 +70,69 @@
                     <th>Title</th>
                     <th>Category</th>
                     <th>Type</th>
+                    <th>Order</th>
+                    <th>Visibility</th>
                     <th>Featured</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for project in projects %}
-                <tr>
-                    <td>{{ project.title }}</td>
-                    <td>{{ project.category }}</td>
+                <tr {% if not project.is_visible %}class="table-secondary"{% endif %}>
+                    <td>
+                        {{ project.title }}
+                        {% if not project.is_visible %}
+                            <small class="text-muted d-block">Hidden from public</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ project.category or '-' }}</td>
                     <td>{{ 'External' if project.is_external else 'Internal' }}</td>
                     <td>
-                        {% if project.featured %}
-                        <span class="badge bg-success">
-                            <i class="fas fa-check"></i>
-                        </span>
+                        <span class="badge bg-light text-dark">{{ project.order_index }}</span>
+                    </td>
+                    <td>
+                        {% if project.is_visible %}
+                            <span class="badge bg-success">
+                                <i class="fas fa-eye"></i> Visible
+                            </span>
                         {% else %}
-                        <span class="badge bg-secondary">
-                            <i class="fas fa-times"></i>
-                        </span>
+                            <span class="badge bg-secondary">
+                                <i class="fas fa-eye-slash"></i> Hidden
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if project.featured and project.is_visible %}
+                            <span class="badge bg-warning">
+                                <i class="fas fa-star"></i> Featured
+                            </span>
+                        {% elif project.featured and not project.is_visible %}
+                            <span class="badge bg-muted">
+                                <i class="fas fa-star"></i> Featured*
+                            </span>
+                            <small class="text-muted d-block">*Hidden overrides</small>
+                        {% else %}
+                            <span class="badge bg-light text-dark">
+                                <i class="fas fa-minus"></i>
+                            </span>
                         {% endif %}
                     </td>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <a href="{{ url_for('edit_project', id=project.id) }}" class="btn btn-outline-primary">
+                            <a href="{{ url_for('edit_project', id=project.id) }}" class="btn btn-outline-primary" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{{ url_for('view_project', id=project.id) }}" target="_blank" class="btn btn-outline-success">
-                                <i class="fas fa-eye"></i>
-                            </a>
+                            {% if project.is_visible %}
+                                <a href="{{ url_for('view_project', id=project.id) }}" target="_blank" class="btn btn-outline-success" title="View Live">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            {% else %}
+                                <button class="btn btn-outline-secondary" disabled title="Hidden - Cannot View">
+                                    <i class="fas fa-eye-slash"></i>
+                                </button>
+                            {% endif %}
                             <form action="{{ url_for('delete_project', id=project.id) }}" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-outline-danger delete-confirm">
+                                <button type="submit" class="btn btn-outline-danger delete-confirm" title="Delete" data-item-name="{{ project.title }}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -99,6 +143,15 @@
             </tbody>
         </table>
     </div>
+    
+    {% if hidden_count > 0 %}
+    <div class="alert alert-info mt-3" role="alert">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Note:</strong> {{ hidden_count }} project{{ 's' if hidden_count != 1 else '' }} currently hidden from public view. 
+        Hidden projects don't appear on your website, even if marked as featured.
+    </div>
+    {% endif %}
+    
     {% else %}
     <div class="text-center text-muted py-5">
         <i class="fas fa-folder-open fa-3x mb-3"></i>

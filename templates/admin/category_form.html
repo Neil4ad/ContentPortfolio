@@ -1,0 +1,129 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block header_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="admin-card">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="admin-card-title mb-0">{{ title }}</h2>
+        <div>
+            <a href="{{ url_for('categories') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to Categories
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <form method="post">
+                {{ form.csrf_token }}
+                
+                <div class="form-group mb-3">
+                    <label class="form-label">{{ form.name.label }}</label>
+                    {% if form.name.errors %}
+                        {{ form.name(class="form-control is-invalid") }}
+                        <div class="form-error">
+                            {% for error in form.name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.name(class="form-control") }}
+                    {% endif %}
+                    <div class="form-text">
+                        Enter a clear, descriptive name for this category (e.g., "Blog Posts", "Case Studies").
+                    </div>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <div class="form-check form-switch">
+                        {{ form.is_active(class="form-check-input", id="is_active") }}
+                        <label class="form-check-label" for="is_active">{{ form.is_active.label }}</label>
+                    </div>
+                    <div class="form-text">
+                        Only active categories appear in project forms. Inactive categories are hidden but preserve existing project assignments.
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ url_for('categories') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> {{ 'Update Category' if category else 'Create Category' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> Category Guidelines
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <h6>Best Practices:</h6>
+                    <ul class="mb-3">
+                        <li><strong>Be consistent:</strong> Use title case (e.g., "Blog Posts" not "blog posts")</li>
+                        <li><strong>Be specific:</strong> "Case Studies" is better than "Work"</li>
+                        <li><strong>Keep it short:</strong> 1-3 words work best</li>
+                        <li><strong>Avoid duplicates:</strong> Check existing categories first</li>
+                    </ul>
+                    
+                    <h6>Common Categories:</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-light text-dark">Articles</span>
+                        <span class="badge bg-light text-dark">Blog Posts</span>
+                        <span class="badge bg-light text-dark">Case Studies</span>
+                        <span class="badge bg-light text-dark">Websites</span>
+                        <span class="badge bg-light text-dark">Branding</span>
+                        <span class="badge bg-light text-dark">UX Design</span>
+                    </div>
+                </div>
+            </div>
+            
+            {% if category %}
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-bar"></i> Category Usage
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <strong>Projects using this category:</strong> 
+                        <span class="badge bg-primary">{{ category.projects|length }}</span>
+                    </p>
+                    
+                    {% if category.projects %}
+                    <div class="small">
+                        <strong>Recent projects:</strong>
+                        <ul class="mb-0 mt-1">
+                            {% for project in category.projects[:3] %}
+                            <li>
+                                <a href="{{ url_for('edit_project', id=project.id) }}" class="text-decoration-none">
+                                    {{ project.title }}
+                                </a>
+                                {% if not project.is_visible %}
+                                    <small class="text-muted">(hidden)</small>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                            {% if category.projects|length > 3 %}
+                            <li class="text-muted">...and {{ category.projects|length - 3 }} more</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    {% else %}
+                    <p class="text-muted small mb-0">No projects assigned to this category yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -139,10 +139,23 @@
                             
                             <div class="row">
                                 <div class="col-md-6">
+                                    <!-- UPDATED: Category dropdown instead of text field -->
                                     <div class="form-group mb-3">
-                                        <label class="form-label">{{ form.category.label }}</label>
-                                        {{ form.category(class="form-control") }}
-                                        <div class="form-text">Category helps to organize and filter projects.</div>
+                                        <label class="form-label">{{ form.category_id.label }}</label>
+                                        {% if form.category_id.errors %}
+                                            {{ form.category_id(class="form-control is-invalid") }}
+                                            <div class="form-error">
+                                                {% for error in form.category_id.errors %}
+                                                    {{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% else %}
+                                            {{ form.category_id(class="form-control") }}
+                                        {% endif %}
+                                        <div class="form-text">
+                                            Select the type of work this project represents. 
+                                            <a href="{{ url_for('categories') }}" target="_blank">Manage categories</a>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -185,10 +198,24 @@
                             
                             <div class="mb-3">
                                 <div class="form-check form-switch">
-                                    {{ form.featured(class="form-check-input") }}
-                                    <label class="form-check-label">{{ form.featured.label }}</label>
+                                    {{ form.is_visible(class="form-check-input", id="is_visible") }}
+                                    <label class="form-check-label" for="is_visible">{{ form.is_visible.label }}</label>
                                 </div>
-                                <div class="form-text">Featured projects appear on the homepage and are highlighted in the projects list.</div>
+                                <div class="form-text">Controls whether this project appears anywhere on your website. Hidden projects are completely invisible to visitors.</div>
+                            </div>
+                            
+                            <div class="mb-3" id="featured-section">
+                                <div class="form-check form-switch">
+                                    {{ form.featured(class="form-check-input", id="featured") }}
+                                    <label class="form-check-label" for="featured">{{ form.featured.label }}</label>
+                                </div>
+                                <div class="form-text">Featured projects appear on the homepage. <span id="featured-note" class="text-muted">(Only applies when project is visible)</span></div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.order_index.label }}</label>
+                                {{ form.order_index(class="form-control", placeholder="0") }}
+                                <div class="form-text">Controls the order projects appear on your site. Lower numbers appear first (0, 10, 20, etc.). Leave empty for default.</div>
                             </div>
                         </div>
                     </div>
@@ -257,7 +284,7 @@
                 </div>
             </div>
             
-            <!-- Preview Tab (only for edit mode) - FIXED HTML STRUCTURE -->
+            <!-- Preview Tab (only for edit mode) -->
             {% if project %}
             <div class="tab-pane fade" id="preview" role="tabpanel" aria-labelledby="preview-tab">
                 <div class="preview-section">
@@ -275,7 +302,7 @@
                             <p>{{ project.description }}</p>
                             
                             {% if project.category %}
-                            <div class="preview-category">{{ project.category }}</div>
+                            <div class="preview-category">{{ project.category.name }}</div>
                             {% endif %}
                             
                             <div class="mt-3">
@@ -308,10 +335,16 @@
     $(document).ready(function() {
         // Initial state
         toggleProjectTypeFields();
+        toggleFeaturedSection();
         
         // Handle changes
         $('#is_external').change(function() {
             toggleProjectTypeFields();
+        });
+        
+        // Handle visibility changes
+        $('#is_visible').change(function() {
+            toggleFeaturedSection();
         });
         
         function toggleProjectTypeFields() {
@@ -321,6 +354,25 @@
             } else {
                 $('.external-content-fields').hide();
                 $('.internal-content-fields').show();
+            }
+        }
+        
+        function toggleFeaturedSection() {
+            const isVisible = $('#is_visible').is(':checked');
+            const featuredSection = $('#featured-section');
+            const featuredCheckbox = $('#featured');
+            const featuredNote = $('#featured-note');
+            
+            if (!isVisible) {
+                // Dim the featured section and show warning
+                featuredSection.css('opacity', '0.6');
+                featuredCheckbox.prop('disabled', true);
+                featuredNote.html('⚠️ Project must be visible to be featured').removeClass('text-muted').addClass('text-warning');
+            } else {
+                // Enable featured section
+                featuredSection.css('opacity', '1');
+                featuredCheckbox.prop('disabled', false);
+                featuredNote.html('(Only applies when project is visible)').removeClass('text-warning').addClass('text-muted');
             }
         }
     });

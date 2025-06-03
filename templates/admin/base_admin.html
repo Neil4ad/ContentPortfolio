@@ -34,6 +34,9 @@
             <a href="{{ url_for('dashboard') }}" class="{{ 'active' if active_tab == 'works' else '' }}">
                 <i class="fas fa-briefcase"></i> Projects
             </a>
+            <a href="{{ url_for('categories') }}" class="{{ 'active' if active_tab == 'categories' else '' }}">
+                <i class="fas fa-tags"></i> Categories
+            </a>
             <a href="{{ url_for('view_messages') }}" class="{{ 'active' if active_tab == 'messages' else '' }}">
                 <i class="fas fa-envelope"></i> Messages
                 {% if unread_messages > 0 %}

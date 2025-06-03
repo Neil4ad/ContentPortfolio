@@ -21,6 +21,19 @@ class User(UserMixin, db.Model):
         return f'<User {self.username}>'
 
 
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationship to projects
+    projects = db.relationship('Project', backref='category', lazy=True)
+    
+    def __repr__(self):
+        return f'<Category {self.name}>'
+
+
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -30,8 +43,13 @@ class Project(db.Model):
     internal_content = db.Column(db.Text, nullable=True)
     thumbnail_url = db.Column(db.String(255), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    category = db.Column(db.String(100), nullable=True)
+    
+    # Updated category relationship
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    
     featured = db.Column(db.Boolean, default=False)
+    is_visible = db.Column(db.Boolean, default=True, nullable=False)
+    order_index = db.Column(db.Integer, default=0, nullable=False)
     results = db.Column(db.Text, nullable=True)
     
     # Additional metadata fields

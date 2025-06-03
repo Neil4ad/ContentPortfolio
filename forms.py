@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SubmitField, URLField, SelectField, HiddenField, ColorField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, URL, Optional, ValidationError
+from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SubmitField, URLField, SelectField, HiddenField, ColorField, IntegerField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, URL, Optional, ValidationError, NumberRange
 from flask_wtf.file import FileField, FileAllowed
+from models import Category
 
 
 # Custom validator for thumbnail URLs that accepts both full URLs and local paths
@@ -50,6 +51,28 @@ class ContactForm(FlaskForm):
     submit = SubmitField('Send Message')
 
 
+class CategoryForm(FlaskForm):
+    name = StringField('Category Name', validators=[
+        DataRequired(), 
+        Length(min=2, max=50, message='Category name must be between 2 and 50 characters')
+    ])
+    is_active = BooleanField('Active', default=True)
+    submit = SubmitField('Save Category')
+    
+    def __init__(self, original_name=None, *args, **kwargs):
+        super(CategoryForm, self).__init__(*args, **kwargs)
+        self.original_name = original_name
+    
+    def validate_name(self, name):
+        # Check for duplicate category names (case-insensitive)
+        existing_category = Category.query.filter(
+            Category.name.ilike(name.data.strip())
+        ).first()
+        
+        if existing_category and existing_category.name.lower() != (self.original_name or '').lower():
+            raise ValidationError('A category with this name already exists.')
+
+
 class ProjectForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=3, max=100)])
     description = TextAreaField('Description', validators=[DataRequired()])
@@ -61,8 +84,13 @@ class ProjectForm(FlaskForm):
     ])
     # FIXED: Use custom validator instead of strict URL validator
     thumbnail_url = StringField('Or Thumbnail URL', validators=[Optional(), flexible_url_validator])
-    category = StringField('Category', validators=[Optional()])
+    
+    # Updated: Category dropdown instead of text field
+    category_id = SelectField('Category', coerce=int, validators=[DataRequired(message='Please select a category')])
+    
+    is_visible = BooleanField('Visible on Site', default=True)
     featured = BooleanField('Featured Project')
+    order_index = IntegerField('Display Order', validators=[Optional(), NumberRange(min=0, max=9999)], default=0)
     results = TextAreaField('Results', validators=[Optional()])
     
     # Fields for additional metadata
@@ -75,6 +103,17 @@ class ProjectForm(FlaskForm):
                               default="View Resource")
     
     submit = SubmitField('Save Project')
+    
+    def __init__(self, *args, **kwargs):
+        super(ProjectForm, self).__init__(*args, **kwargs)
+        # Populate category choices with active categories
+        self.category_id.choices = [
+            (category.id, category.name) 
+            for category in Category.query.filter_by(is_active=True).order_by(Category.name).all()
+        ]
+        # Add empty option if no category selected
+        if not self.category_id.data:
+            self.category_id.choices.insert(0, (0, 'Select a category...'))
 
 
 class ChangePasswordForm(FlaskForm):
