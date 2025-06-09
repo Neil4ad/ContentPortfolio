@@ -117,9 +117,9 @@ def reading_time(text, wpm=200):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Initialize database and admin user
-@app.before_first_request
+# Initialize database and admin user - Flask 3.x compatible
 def initialize_db():
+    """Initialize database with default data if needed"""
     db.create_all()
     
     # Initialize site settings if they don't exist
@@ -159,6 +159,10 @@ def initialize_db():
             business_goal = BusinessGoal(name=goal_name, color=goal_color, is_active=True)
             db.session.add(business_goal)
         db.session.commit()
+
+# Flask 3.x compatible - call initialize_db when needed
+with app.app_context():
+    initialize_db()
 
 # Global context processor to include site settings in templates
 @app.context_processor
@@ -795,8 +799,6 @@ def export_settings():
         'banner_image': settings.banner_image,
         'banner_gradient_start': settings.banner_gradient_start,
         'banner_gradient_end': settings.banner_gradient_end,
-        'primary_text_color': settings.primary_text_color,
-        'secondary_text_color': settings.secondary_text_color,
         'hero_text_color': settings.hero_text_color,
         'link_hover_color': settings.link_hover_color,
         'button_hover_color': settings.button_hover_color,
