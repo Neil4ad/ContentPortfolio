@@ -12,8 +12,6 @@
         </a>
     </div>
     
-
-    
     <div class="project-detail-two-columns">
         <div class="project-detail-left-column fade-in">
             <h1 class="project-title">{{ project.title }}</h1>
@@ -23,6 +21,17 @@
                 <div class="project-meta-item">
                     <span class="project-meta-label">Category</span>
                     <span class="project-meta-value">{{ project.category.name }}</span>
+                </div>
+                {% endif %}
+                
+                {% if project.business_goal %}
+                <div class="project-meta-item">
+                    <span class="project-meta-label">Content Goal</span>
+                    <span class="project-meta-value">
+                        <span class="project-business-goal-badge" data-goal-color="{{ project.business_goal.color }}">
+                            {{ project.business_goal.name }}
+                        </span>
+                    </span>
                 </div>
                 {% endif %}
                 
@@ -71,7 +80,7 @@
                         {{ project.description|markdown|safe }}
                     {% else %}
                         <!-- Plain text, preserve line breaks -->
-                        <div style="white-space: pre-wrap;">{{ project.description }}</div>
+                        <div class="project-description-text">{{ project.description }}</div>
                     {% endif %}
                 {% elif not project.is_external and project.internal_content %}
                     <!-- For internal projects, use internal_content (always markdown) -->
@@ -81,7 +90,7 @@
                     {% if project.description and ('**' in project.description or '*' in project.description or '#' in project.description or '[' in project.description) %}
                         {{ project.description|markdown|safe }}
                     {% else %}
-                        <div style="white-space: pre-wrap;">{{ project.description }}</div>
+                        <div class="project-description-text">{{ project.description }}</div>
                     {% endif %}
                 {% else %}
                     <p><em>No description available.</em></p>

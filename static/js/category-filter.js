@@ -1,72 +1,150 @@
 /**
- * Category filter functionality for projects page
- * This script provides the filtering functionality for project categories
+ * Category and Business Goal filter functionality for projects page
+ * This script provides the filtering functionality for project categories and business goals
  */
 
+// Global state to track active filters
+let activeFilters = {
+    category: 'all',
+    business_goal: 'all'
+};
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize category filtering if filter container exists
+    // Initialize filtering if filter container exists
     const filterContainer = document.getElementById('nd-filter-container');
     if (filterContainer) {
-        initCategoryFilters();
+        initFilters();
     }
 });
 
 /**
- * Initialize the category filters
+ * Initialize the filters
  */
-function initCategoryFilters() {
-    const allButtons = document.querySelectorAll('.category-filter-btn');
+function initFilters() {
+    const allButtons = document.querySelectorAll('.category-filter-btn, .business-goal-filter-btn');
     
     // Add click event to each filter button
     allButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Get the category from data attribute or custom attribute
-            const category = this.getAttribute('data-category') || 
-                             this.getAttribute('onclick').match(/'([^']+)'/)[1];
-            
-            // Filter the projects
-            filterProjectsByCategory(this, category);
+            // Get the filter type and value from the onclick attribute
+            const onclickAttr = this.getAttribute('onclick');
+            if (onclickAttr) {
+                // Parse the onclick to extract parameters
+                const matches = onclickAttr.match(/ndFilterProjects\(this,\s*'([^']+)',\s*'([^']+)'\)/);
+                if (matches) {
+                    const filterValue = matches[1];
+                    const filterType = matches[2];
+                    filterProjects(this, filterValue, filterType);
+                }
+            }
         });
     });
     
     // Check URL hash to see if we should filter on page load
     const hash = window.location.hash.substring(1);
-    if (hash && hash.startsWith('category-')) {
-        const category = hash.replace('category-', '');
-        const button = document.querySelector(`[data-category="${category}"]`) || 
-                       document.getElementById(`nd-filter-${category.toLowerCase().replace(/\s+/g, '-')}`);
-        
-        if (button) {
-            filterProjectsByCategory(button, category);
+    if (hash) {
+        if (hash.startsWith('category-')) {
+            const category = hash.replace('category-', '').replace(/-/g, ' ');
+            const button = document.querySelector(`[onclick*="'${category}', 'category'"]`);
+            if (button) {
+                filterProjects(button, category, 'category');
+            }
+        } else if (hash.startsWith('goal-')) {
+            const goal = hash.replace('goal-', '').replace(/-/g, ' ');
+            const button = document.querySelector(`[onclick*="'${goal}', 'business_goal'"]`);
+            if (button) {
+                filterProjects(button, goal, 'business_goal');
+            }
         }
     }
 }
 
 /**
- * Filter projects by category
+ * Filter projects by category or business goal
  * @param {HTMLElement} clickedButton - The button that was clicked
- * @param {string} category - The category to filter by
+ * @param {string} filterValue - The value to filter by ('all' or specific category/goal)
+ * @param {string} filterType - Either 'category' or 'business_goal'
  */
-function filterProjectsByCategory(clickedButton, category) {
-    // Update all button styles
-    const allButtons = document.querySelectorAll('.category-filter-btn');
-    allButtons.forEach(button => {
+function filterProjects(clickedButton, filterValue, filterType) {
+    // Update the active filter state
+    activeFilters[filterType] = filterValue;
+    
+    // Update button styles for the specific filter type
+    const filterClass = filterType === 'category' ? '.category-filter-btn' : '.business-goal-filter-btn';
+    const allFilterButtons = document.querySelectorAll(filterClass);
+    
+    allFilterButtons.forEach(button => {
         button.classList.remove('nd-active');
+        // Reset any custom colors for business goal buttons
+        if (filterType === 'business_goal') {
+            const color = button.getAttribute('data-goal-color');
+            if (color) {
+                button.style.backgroundColor = '';
+                button.style.color = '';
+                button.style.borderColor = color;
+            } else {
+                // Reset "All" button styles
+                button.style.backgroundColor = '';
+                button.style.color = '';
+                button.style.borderColor = '';
+            }
+        }
     });
     
     // Set active style for clicked button only
     clickedButton.classList.add('nd-active');
     
-    // Update URL hash for bookmarkability
-    window.location.hash = `category-${category.toLowerCase().replace(/\s+/g, '-')}`;
+    // Apply custom color for business goal buttons when active
+    if (filterType === 'business_goal') {
+        const color = clickedButton.getAttribute('data-goal-color');
+        if (color && filterValue !== 'all') {
+            clickedButton.style.backgroundColor = color;
+            clickedButton.style.color = 'white';
+            clickedButton.style.borderColor = color;
+        } else if (filterValue === 'all') {
+            // Use default active styling for "All" button
+            clickedButton.style.backgroundColor = 'var(--primary-color)';
+            clickedButton.style.color = 'white';
+            clickedButton.style.borderColor = 'var(--primary-color)';
+        }
+    }
     
-    // Filter projects
+    // Update URL hash for bookmarkability
+    if (filterValue !== 'all') {
+        const hashPrefix = filterType === 'category' ? 'category-' : 'goal-';
+        window.location.hash = `${hashPrefix}${filterValue.toLowerCase().replace(/\s+/g, '-')}`;
+    } else {
+        // If both filters are 'all', clear the hash
+        if (activeFilters.category === 'all' && activeFilters.business_goal === 'all') {
+            window.location.hash = '';
+        }
+    }
+    
+    // Apply the combined filters
+    applyFilters();
+}
+
+/**
+ * Apply both category and business goal filters
+ */
+function applyFilters() {
     const projects = document.querySelectorAll('.project-card');
     let visibleCount = 0;
     
     projects.forEach(card => {
         const cardCategory = card.getAttribute('data-category');
-        if (category === 'all' || cardCategory === category) {
+        const cardBusinessGoal = card.getAttribute('data-business-goal');
+        
+        // Check if project matches category filter
+        const categoryMatch = activeFilters.category === 'all' || 
+                            cardCategory === activeFilters.category;
+        
+        // Check if project matches business goal filter
+        const goalMatch = activeFilters.business_goal === 'all' || 
+                         cardBusinessGoal === activeFilters.business_goal;
+        
+        // Show project only if it matches both filters
+        if (categoryMatch && goalMatch) {
             card.style.display = '';
             visibleCount++;
         } else {
@@ -75,17 +153,41 @@ function filterProjectsByCategory(clickedButton, category) {
     });
     
     // Show "no projects" message if no projects are visible
-    const noProjectsMessage = document.querySelector('.no-projects-message');
+    const noProjectsMessage = document.querySelector('.no-projects');
     if (noProjectsMessage) {
         if (visibleCount === 0) {
             noProjectsMessage.style.display = 'block';
+            // Update the message to reflect active filters
+            const filterText = getActiveFilterText();
+            noProjectsMessage.innerHTML = `<p>No projects found${filterText}. Try adjusting your filters.</p>`;
         } else {
             noProjectsMessage.style.display = 'none';
         }
     }
 }
 
-// Make the function available globally for inline onclick handlers
-window.ndFilterProjects = function(clickedButton, category) {
-    filterProjectsByCategory(clickedButton, category);
+/**
+ * Get text description of active filters
+ */
+function getActiveFilterText() {
+    const parts = [];
+    
+    if (activeFilters.category !== 'all') {
+        parts.push(`in category "${activeFilters.category}"`);
+    }
+    
+    if (activeFilters.business_goal !== 'all') {
+        parts.push(`with business goal "${activeFilters.business_goal}"`);
+    }
+    
+    if (parts.length === 0) {
+        return '';
+    }
+    
+    return ' ' + parts.join(' and ');
+}
+
+// Make the function available globally for inline onclick handlers (legacy support)
+window.ndFilterProjects = function(clickedButton, filterValue, filterType = 'category') {
+    filterProjects(clickedButton, filterValue, filterType);
 };

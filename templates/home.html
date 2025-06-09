@@ -35,13 +35,14 @@
                     {% if project.category %}
                     <div class="work-card-category">{{ project.category.name }}</div>
                     {% endif %}
+                    {% if project.business_goal %}
+                    <div class="work-card-business-goal" data-goal-color="{{ project.business_goal.color }}">
+                        {{ project.business_goal.name }}
+                    </div>
+                    {% endif %}
                     <p class="work-card-description">{{ project.description|truncate_text(150) }}</p>
                     <a href="{{ url_for('view_project', id=project.id) }}" class="work-card-link">
                         View Project
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                            <polyline points="12 5 19 12 12 19"></polyline>
-                        </svg>
                     </a>
                 </div>
             </article>
@@ -61,4 +62,8 @@
         <a href="{{ url_for('projects') }}" class="btn">View All Work</a>
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}

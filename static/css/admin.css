@@ -250,6 +250,91 @@ body {
 }
 
 /* ==================
+   BUSINESS GOAL COLOR COMPONENTS
+   ================== */
+
+.admin-goal-color-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+    /* Background color will be set via data-goal-color attribute */
+}
+
+.admin-color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: white;
+    opacity: 0.3;
+    flex-shrink: 0;
+}
+
+.admin-goal-preview-badge {
+    display: inline-block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: white;
+    /* Background color will be set via data-goal-color attribute */
+}
+
+.admin-dashboard-goal-badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+    /* Background color will be set via data-goal-color attribute */
+}
+
+.admin-preview-goal-badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+    /* Background color will be set via data-goal-color attribute */
+}
+
+/* ==================
+   SETTINGS PAGE COMPONENTS
+   ================== */
+
+.settings-banner-preview {
+    background: linear-gradient(to right, #4F46E5, #3B82F6);
+    color: white;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.settings-thumbnail-preview {
+    max-width: 200px;
+    max-height: 120px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    border: 1px solid var(--admin-border-color);
+    display: block;
+}
+
+.settings-profile-preview {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+    border: 1px solid var(--admin-border-color);
+    display: block;
+}
+
+/* ==================
    MESSAGES COMPONENT
    ================== */
 
@@ -703,3 +788,161 @@ body {
     border-radius: .375rem;
     border: 1px solid var(--admin-border-color);
 }
+
+/* ==================
+   PROJECT FORM COMPONENTS 
+   ================== */
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.internal-content-fields,
+.external-content-fields,
+.resource-fields {
+    display: none;
+}
+
+/* Preview section */
+.preview-section {
+    margin-top: 2rem;
+}
+
+.preview-card {
+    background-color: var(--admin-card-bg);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.preview-image {
+    height: auto;
+    max-height: 400px;
+    position: relative;
+    overflow: hidden;
+    background-color: #f9fafb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9ca3af;
+}
+
+.preview-image img {
+    width: 100%;
+    max-height: 400px;
+    height: auto;
+    object-fit: contain;
+}
+
+.preview-content {
+    padding: 1.5rem;
+}
+
+.preview-title {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.preview-category {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+    background-color: #f3f4f6;
+    margin-top: 1rem;
+}
+
+/* Current thumbnail styling */
+.current-thumbnail-image {
+    max-height: 150px;
+    border: 1px solid var(--admin-border-color);
+    border-radius: 0.25rem;
+}
+
+/* Fade inactive tab content */
+.tab-pane.fade {
+    opacity: 0;
+    transition: opacity 0.15s linear;
+}
+
+.tab-pane.fade.show {
+    opacity: 1;
+}
+
+/* ==================
+   CONTENT GOAL FORM COMPONENTS (moved from business_goal_form.html)
+   ================== */
+
+.color-picker-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.color-picker-input {
+    width: 80px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.color-picker-info {
+    flex-grow: 1;
+}
+
+.content-goal-preview {
+    background-color: #3B82F6;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.suggested-goals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.suggested-goal {
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.suggested-goal-blue { background-color: #3B82F6; }
+.suggested-goal-green { background-color: #10B981; }
+.suggested-goal-purple { background-color: #8B5CF6; }
+.suggested-goal-orange { background-color: #F59E0B; }
+.suggested-goal-indigo { background-color: #6366F1; }
+
+.color-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.color-suggestion {
+    color: white;
+    border: none;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.color-suggestion:hover {
+    opacity: 0.8;
+}
+
+.color-suggestion-blue { background-color: #3B82F6; }
+.color-suggestion-green { background-color: #10B981; }
+.color-suggestion-purple { background-color: #8B5CF6; }
+.color-suggestion-orange { background-color: #F59E0B; }
+.color-suggestion-indigo { background-color: #6366F1; }
+.color-suggestion-teal { background-color: #14B8A6; }

@@ -9,8 +9,8 @@ import logging
 from flask_mail import Mail, Message as MailMessage
 
 # Import database model classes
-from models import db, User, Project, Message, SiteSettings, Category
-from forms import LoginForm, ContactForm, ProjectForm, ChangePasswordForm, UpdateProfileForm, SiteSettingsForm, CategoryForm
+from models import db, User, Project, Message, SiteSettings, Category, BusinessGoal
+from forms import LoginForm, ContactForm, ProjectForm, ChangePasswordForm, UpdateProfileForm, SiteSettingsForm, CategoryForm, BusinessGoalForm
 
 # Import configuration
 from config import config
@@ -146,6 +146,20 @@ def initialize_db():
             db.session.add(category)
         db.session.commit()
 
+    # Create default business goals if they don't exist
+    if BusinessGoal.query.count() == 0:
+        default_business_goals = [
+            ('User Engagement', '#3B82F6'),      # Blue
+            ('Education', '#10B981'),            # Green
+            ('Brand Awareness', '#8B5CF6'),      # Purple
+            ('Lead Generation', '#F59E0B'),      # Orange
+            ('Strategy & Planning', '#6366F1'),   # Indigo
+        ]
+        for goal_name, goal_color in default_business_goals:
+            business_goal = BusinessGoal(name=goal_name, color=goal_color, is_active=True)
+            db.session.add(business_goal)
+        db.session.commit()
+
 # Global context processor to include site settings in templates
 @app.context_processor
 def inject_site_settings():
@@ -232,7 +246,14 @@ def projects():
     # Get unique categories - UPDATED: Use relationship
     categories = list(set(project.category.name for project in all_projects if project.category))
     
-    return render_template('projects.html', projects=all_projects, categories=categories)
+   # Get unique business goals for projects that have them (with color info)
+    business_goal_objects = {}
+    for project in all_projects:
+        if project.business_goal:
+            business_goal_objects[project.business_goal.name] = project.business_goal
+    business_goals = list(business_goal_objects.values())
+    
+    return render_template('projects.html', projects=all_projects, categories=categories, business_goals=business_goals)
 
 @app.route('/project/<int:id>')
 def view_project(id):
@@ -279,6 +300,9 @@ def dashboard():
     # Categories count
     categories_count = Category.query.filter_by(is_active=True).count()
     
+    # Business Goals count
+    business_goals_count = BusinessGoal.query.filter_by(is_active=True).count()
+    
     # Convert set to list for JSON serialization - Updated to use relationship
     categories = [project.category.name for project in projects if project.category]
     categories = list(set(categories))
@@ -291,6 +315,7 @@ def dashboard():
         hidden_count=hidden_count,
         featured_count=featured_count,
         categories_count=categories_count,
+        business_goals_count=business_goals_count,
         categories=categories,
         active_tab='dashboard'
     )
@@ -406,6 +431,121 @@ def toggle_category(id):
     
     return redirect(url_for('categories'))
 
+
+# Business Goals Management Routes
+@app.route('/contentadmin/business-goals')
+@login_required
+def business_goals():
+    business_goals = BusinessGoal.query.order_by(BusinessGoal.name).all()
+    
+    # Get project counts for each business goal
+    goal_stats = {}
+    for goal in business_goals:
+        goal_stats[goal.id] = {
+            'total_projects': len(goal.projects),
+            'visible_projects': len([p for p in goal.projects if p.is_visible])
+        }
+    
+    return render_template('admin/business_goals.html', 
+                         business_goals=business_goals, 
+                         goal_stats=goal_stats,
+                         active_tab='business_goals')
+
+@app.route('/contentadmin/business-goals/add', methods=['GET', 'POST'])
+@login_required
+def add_business_goal():
+    form = BusinessGoalForm()
+    
+    if form.validate_on_submit():
+        try:
+            business_goal = BusinessGoal(
+                name=form.name.data.strip(),
+                color=form.color.data,
+                is_active=form.is_active.data
+            )
+            db.session.add(business_goal)
+            db.session.commit()
+            
+            flash(f'Business goal "{business_goal.name}" added successfully!', 'success')
+            return redirect(url_for('business_goals'))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error creating business goal: {str(e)}")
+            flash(f'Error creating business goal: {str(e)}', 'error')
+    
+    return render_template('admin/business_goal_form.html', 
+                         form=form, 
+                         title="Add New Business Goal",
+                         active_tab='business_goals')
+
+@app.route('/contentadmin/business-goals/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_business_goal(id):
+    business_goal = BusinessGoal.query.get_or_404(id)
+    form = BusinessGoalForm(obj=business_goal, original_name=business_goal.name)
+    
+    if form.validate_on_submit():
+        try:
+            business_goal.name = form.name.data.strip()
+            business_goal.color = form.color.data
+            business_goal.is_active = form.is_active.data
+            db.session.commit()
+            
+            flash(f'Business goal "{business_goal.name}" updated successfully!', 'success')
+            return redirect(url_for('business_goals'))
+        except Exception as e:
+            db.session.rollback()
+            app.logger.error(f"Error updating business goal: {str(e)}")
+            flash(f'Error updating business goal: {str(e)}', 'error')
+    
+    return render_template('admin/business_goal_form.html', 
+                         form=form, 
+                         business_goal=business_goal,
+                         title="Edit Business Goal",
+                         active_tab='business_goals')
+
+@app.route('/contentadmin/business-goals/delete/<int:id>', methods=['POST'])
+@login_required
+def delete_business_goal(id):
+    business_goal = BusinessGoal.query.get_or_404(id)
+    
+    # Check if business goal has projects
+    if business_goal.projects:
+        flash(f'Cannot delete business goal "{business_goal.name}" - it has {len(business_goal.projects)} project(s). Remove this goal from projects first.', 'error')
+        return redirect(url_for('business_goals'))
+    
+    try:
+        goal_name = business_goal.name
+        db.session.delete(business_goal)
+        db.session.commit()
+        
+        flash(f'Business goal "{goal_name}" deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error deleting business goal: {str(e)}")
+        flash(f'Error deleting business goal: {str(e)}', 'error')
+    
+    return redirect(url_for('business_goals'))
+
+@app.route('/contentadmin/business-goals/toggle/<int:id>', methods=['POST'])
+@login_required
+def toggle_business_goal(id):
+    business_goal = BusinessGoal.query.get_or_404(id)
+    
+    try:
+        business_goal.is_active = not business_goal.is_active
+        db.session.commit()
+        
+        status = "activated" if business_goal.is_active else "deactivated"
+        flash(f'Business goal "{business_goal.name}" {status} successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error toggling business goal: {str(e)}")
+        flash(f'Error updating business goal: {str(e)}', 'error')
+    
+    return redirect(url_for('business_goals'))
+
+
 @app.route('/contentadmin/add-project', methods=['GET', 'POST'])
 @login_required
 def add_project():
@@ -433,6 +573,7 @@ def add_project():
                 internal_content=form.internal_content.data if not form.is_external.data else None,
                 thumbnail_url=thumbnail_url,
                 category_id=form.category_id.data,  # UPDATED: Use category_id
+                business_goal_id=form.business_goal_id.data if form.business_goal_id.data != 0 else None,  # NEW: Business goal assignment
                 is_visible=form.is_visible.data,
                 featured=form.featured.data,
                 order_index=form.order_index.data or 0,
@@ -472,6 +613,7 @@ def edit_project(id):
             project.external_url = form.external_url.data if form.is_external.data else None
             project.internal_content = form.internal_content.data if not form.is_external.data else None
             project.category_id = form.category_id.data  # UPDATED: Use category_id
+            project.business_goal_id = form.business_goal_id.data if form.business_goal_id.data != 0 else None  # NEW: Business goal assignment
             project.is_visible = form.is_visible.data
             project.featured = form.featured.data
             project.order_index = form.order_index.data or 0

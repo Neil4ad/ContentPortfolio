@@ -1,12 +1,17 @@
 /**
  * Main JavaScript file for portfolio website
- * Contains navigation and utility functions
+ * Contains navigation, business goal colors, and utility functions
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Only initialize components that exist in the current page
+    // Initialize core components
     initMobileMenu();
-    initThemeToggle();
+    
+    // Initialize dynamic styling
+    applyBusinessGoalColors();
+    
+    // Initialize utility functions
+    initializeUtilityFunctions();
 });
 
 /**
@@ -17,7 +22,6 @@ function initMobileMenu() {
     const navbarLinks = document.querySelector('.navbar-links');
     
     if (!mobileToggle || !navbarLinks) {
-        // Elements don't exist on this page, skip initialization
         return;
     }
     
@@ -29,83 +33,99 @@ function initMobileMenu() {
 }
 
 /**
- * Initialize theme toggle functionality
+ * Apply business goal colors to all elements with data-goal-color
  */
-function initThemeToggle() {
-    const themeToggleButton = document.querySelector('.theme-toggle');
-    const sunIcon = document.querySelector('.sun-icon');
-    const moonIcon = document.querySelector('.moon-icon');
-    const htmlElement = document.documentElement;
+function applyBusinessGoalColors() {
+    const elementsWithColors = document.querySelectorAll('[data-goal-color]');
     
-    if (!themeToggleButton || !sunIcon || !moonIcon) {
-        // Elements don't exist on this page, skip initialization
-        return;
-    }
+    elementsWithColors.forEach(function(element) {
+        const color = element.getAttribute('data-goal-color');
+        if (!color) return;
+        
+        if (element.classList.contains('business-goal-filter-btn')) {
+            // Filter buttons: colored border, colored background when active
+            element.style.borderColor = color;
+            if (element.classList.contains('nd-active') || element.classList.contains('active')) {
+                element.style.backgroundColor = color;
+                element.style.color = 'white';
+            }
+        } else {
+            // Everything else: colored background
+            element.style.backgroundColor = color;
+            element.style.color = 'white';
+        }
+    });
     
-    // Apply theme based on localStorage or system preference
-    applyTheme(getThemePreference());
-    
-    // Toggle theme when button is clicked
-    themeToggleButton.addEventListener('click', toggleTheme);
-}
-
-/**
- * Get theme preference from localStorage or system
- * @returns {string} 'dark' or 'light'
- */
-function getThemePreference() {
-    // First check localStorage
-    const savedTheme = localStorage.getItem('theme');
-    
-    if (savedTheme) {
-        return savedTheme;
-    }
-    
-    // If no saved preference, check system preference
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
-/**
- * Apply theme to the document
- * @param {string} theme 'dark' or 'light'
- */
-function applyTheme(theme) {
-    const sunIcon = document.querySelector('.sun-icon');
-    const moonIcon = document.querySelector('.moon-icon');
-    const htmlElement = document.documentElement;
-
-    if (!sunIcon || !moonIcon) {
-        // Missing elements, apply theme anyway but skip icon changes
-        htmlElement.setAttribute('data-theme', theme);
-        return;
-    }
-    
-    if (theme === 'dark') {
-        htmlElement.setAttribute('data-theme', 'dark');
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
-    } else {
-        htmlElement.setAttribute('data-theme', 'light');
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
+    // Handle "All" button for business goals on page load
+    const allBusinessGoalButton = document.querySelector('.business-goal-filter-btn.nd-active:not([data-goal-color])');
+    if (allBusinessGoalButton) {
+        allBusinessGoalButton.style.backgroundColor = 'var(--primary-color)';
+        allBusinessGoalButton.style.color = 'white';
+        allBusinessGoalButton.style.borderColor = 'var(--primary-color)';
     }
 }
 
 /**
- * Toggle between light and dark themes
+ * Initialize additional utility functions for better user experience
  */
-function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+function initializeUtilityFunctions() {
+    // Smooth scroll for anchor links
+    initSmoothScroll();
     
-    applyTheme(newTheme);
-    saveThemePreference(newTheme);
+    // Enhanced form interactions
+    enhanceFormExperience();
 }
 
 /**
- * Save theme preference to localStorage
- * @param {string} theme 'dark' or 'light'
+ * Smooth scroll behavior for anchor links
  */
-function saveThemePreference(theme) {
-    localStorage.setItem('theme', theme);
+function initSmoothScroll() {
+    const anchors = document.querySelectorAll('a[href^="#"]');
+    anchors.forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+/**
+ * Enhance form user experience
+ */
+function enhanceFormExperience() {
+    const forms = document.querySelectorAll('form');
+    forms.forEach(function(form) {
+        // Add loading state to submit buttons
+        form.addEventListener('submit', function() {
+            const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitBtn && !submitBtn.disabled) {
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+                
+                // Restore after a timeout in case submission fails
+                setTimeout(function() {
+                    submitBtn.style.opacity = '';
+                    submitBtn.style.cursor = '';
+                }, 5000);
+            }
+        });
+    });
+    
+    // Enhanced focus states for better accessibility
+    const inputs = document.querySelectorAll('input, textarea, select');
+    inputs.forEach(function(input) {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+    });
 }

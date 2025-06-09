@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SubmitField, URLField, SelectField, HiddenField, ColorField, IntegerField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, URL, Optional, ValidationError, NumberRange
 from flask_wtf.file import FileField, FileAllowed
-from models import Category
+from models import Category, BusinessGoal
 
 
 # Custom validator for thumbnail URLs that accepts both full URLs and local paths
@@ -73,6 +73,29 @@ class CategoryForm(FlaskForm):
             raise ValidationError('A category with this name already exists.')
 
 
+class BusinessGoalForm(FlaskForm):
+    name = StringField('Business Goal Name', validators=[
+        DataRequired(), 
+        Length(min=2, max=50, message='Business goal name must be between 2 and 50 characters')
+    ])
+    color = ColorField('Button Color', default="#3B82F6", validators=[DataRequired()])
+    is_active = BooleanField('Active', default=True)
+    submit = SubmitField('Save Business Goal')
+    
+    def __init__(self, original_name=None, *args, **kwargs):
+        super(BusinessGoalForm, self).__init__(*args, **kwargs)
+        self.original_name = original_name
+    
+    def validate_name(self, name):
+        # Check for duplicate business goal names (case-insensitive)
+        existing_goal = BusinessGoal.query.filter(
+            BusinessGoal.name.ilike(name.data.strip())
+        ).first()
+        
+        if existing_goal and existing_goal.name.lower() != (self.original_name or '').lower():
+            raise ValidationError('A business goal with this name already exists.')
+
+
 class ProjectForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=3, max=100)])
     description = TextAreaField('Description', validators=[DataRequired()])
@@ -87,6 +110,9 @@ class ProjectForm(FlaskForm):
     
     # Updated: Category dropdown instead of text field
     category_id = SelectField('Category', coerce=int, validators=[DataRequired(message='Please select a category')])
+    
+    # NEW: Business Goal dropdown (optional)
+    business_goal_id = SelectField('Business Goal', coerce=int, validators=[Optional()])
     
     is_visible = BooleanField('Visible on Site', default=True)
     featured = BooleanField('Featured Project')
@@ -106,6 +132,7 @@ class ProjectForm(FlaskForm):
     
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
+        
         # Populate category choices with active categories
         self.category_id.choices = [
             (category.id, category.name) 
@@ -114,6 +141,15 @@ class ProjectForm(FlaskForm):
         # Add empty option if no category selected
         if not self.category_id.data:
             self.category_id.choices.insert(0, (0, 'Select a category...'))
+        
+        # Populate business goal choices with active business goals
+        business_goal_choices = [
+            (goal.id, goal.name) 
+            for goal in BusinessGoal.query.filter_by(is_active=True).order_by(BusinessGoal.name).all()
+        ]
+        # Add empty option (since business goals are optional)
+        business_goal_choices.insert(0, (0, 'Select a business goal (optional)...'))
+        self.business_goal_id.choices = business_goal_choices
 
 
 class ChangePasswordForm(FlaskForm):

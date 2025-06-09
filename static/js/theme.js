@@ -78,3 +78,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Apply dynamic CSS variables from data attributes
+document.addEventListener('DOMContentLoaded', function() {
+    const body = document.body;
+    if (body.classList.contains('dynamic-theme-vars')) {
+        const bannerStart = body.getAttribute('data-banner-start') || '#4F46E5';
+        const bannerEnd = body.getAttribute('data-banner-end') || '#3B82F6';
+        const heroText = body.getAttribute('data-hero-text') || '#ffffff';
+        const linkHover = body.getAttribute('data-link-hover') || '#4f46e5';
+        const buttonHover = body.getAttribute('data-button-hover') || '#3b82f6';
+        
+        document.documentElement.style.setProperty('--banner-gradient-start', bannerStart);
+        document.documentElement.style.setProperty('--banner-gradient-end', bannerEnd);
+        document.documentElement.style.setProperty('--hero-text-color', heroText);
+        document.documentElement.style.setProperty('--link-hover-color', linkHover);
+        document.documentElement.style.setProperty('--button-hover-color', buttonHover);
+    }
+});

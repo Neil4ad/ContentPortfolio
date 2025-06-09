@@ -436,3 +436,25 @@ textarea:focus {
         scroll-behavior: auto !important;
     }
 }
+
+/* ==================
+   DYNAMIC THEME VARIABLES (moved from base.html)
+   ================== */
+
+/* Apply dynamic CSS variables from template data attributes */
+.dynamic-theme-vars {
+    --banner-gradient-start: attr(data-banner-start);
+    --banner-gradient-end: attr(data-banner-end);
+    --hero-text-color: attr(data-hero-text);
+    --link-hover-color: attr(data-link-hover);
+    --button-hover-color: attr(data-button-hover);
+}
+
+/* Fallback for browsers that don't support attr() with custom properties */
+.dynamic-theme-vars:not([data-banner-start]) {
+    --banner-gradient-start: #4F46E5;
+    --banner-gradient-end: #3B82F6;
+    --hero-text-color: #ffffff;
+    --link-hover-color: #4f46e5;
+    --button-hover-color: #3b82f6;
+}

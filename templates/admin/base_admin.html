@@ -37,6 +37,9 @@
             <a href="{{ url_for('categories') }}" class="{{ 'active' if active_tab == 'categories' else '' }}">
                 <i class="fas fa-tags"></i> Categories
             </a>
+            <a href="{{ url_for('business_goals') }}" class="{{ 'active' if active_tab == 'business_goals' else '' }}">
+                <i class="fas fa-bullseye"></i> Content Goals
+            </a>
             <a href="{{ url_for('view_messages') }}" class="{{ 'active' if active_tab == 'messages' else '' }}">
                 <i class="fas fa-envelope"></i> Messages
                 {% if unread_messages > 0 %}
@@ -123,8 +126,28 @@
         // Initialize theme
         applyTheme(getCurrentTheme());
         
+        // Apply business goal colors to admin elements
+        function applyAdminBusinessGoalColors() {
+            const colorElements = document.querySelectorAll('[data-goal-color]');
+            
+            colorElements.forEach(function(element) {
+                const color = element.getAttribute('data-goal-color');
+                if (color) {
+                    if (element.classList.contains('admin-goal-color-badge') || 
+                        element.classList.contains('admin-goal-preview-badge') ||
+                        element.classList.contains('admin-dashboard-goal-badge') ||
+                        element.classList.contains('admin-preview-goal-badge')) {
+                        element.style.backgroundColor = color;
+                    }
+                }
+            });
+        }
+        
         // jQuery Document Ready
         $(document).ready(function() {
+            // Apply business goal colors
+            applyAdminBusinessGoalColors();
+            
             // Theme toggle functionality
             $('#themeToggle').on('click', function() {
                 const currentTheme = getCurrentTheme();

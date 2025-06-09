@@ -54,6 +54,32 @@
     </div>
 </div>
 
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon purple">
+                <i class="fas fa-tags"></i>
+            </div>
+            <div class="stats-data">
+                <h3 class="stats-value">{{ categories_count }}</h3>
+                <p class="stats-label">Active Categories</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-3">
+        <div class="stats-card">
+            <div class="stats-icon blue">
+                <i class="fas fa-bullseye"></i>
+            </div>
+            <div class="stats-data">
+                <h3 class="stats-value">{{ business_goals_count }}</h3>
+                <p class="stats-label">Active Content Goals</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="admin-card">
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="admin-card-title">Projects</h2>
@@ -69,6 +95,7 @@
                 <tr>
                     <th>Title</th>
                     <th>Category</th>
+                    <th>Content Goal</th>
                     <th>Type</th>
                     <th>Order</th>
                     <th>Visibility</th>
@@ -85,7 +112,16 @@
                             <small class="text-muted d-block">Hidden from public</small>
                         {% endif %}
                     </td>
-                    <td>{{ project.category or '-' }}</td>
+                    <td>{{ project.category.name if project.category else '-' }}</td>
+                    <td>
+                        {% if project.business_goal %}
+                            <span class="admin-dashboard-goal-badge" data-goal-color="{{ project.business_goal.color }}">
+                                {{ project.business_goal.name }}
+                            </span>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
                     <td>{{ 'External' if project.is_external else 'Internal' }}</td>
                     <td>
                         <span class="badge bg-light text-dark">{{ project.order_index }}</span>

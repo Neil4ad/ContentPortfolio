@@ -34,6 +34,20 @@ class Category(db.Model):
         return f'<Category {self.name}>'
 
 
+class BusinessGoal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    color = db.Column(db.String(20), default="#3B82F6", nullable=False)  # Hex color for button styling
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationship to projects
+    projects = db.relationship('Project', backref='business_goal', lazy=True)
+    
+    def __repr__(self):
+        return f'<BusinessGoal {self.name}>'
+
+
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -44,8 +58,11 @@ class Project(db.Model):
     thumbnail_url = db.Column(db.String(255), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Updated category relationship
+    # Category relationship (required)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    
+    # Business Goal relationship (optional)
+    business_goal_id = db.Column(db.Integer, db.ForeignKey('business_goal.id'), nullable=True)
     
     featured = db.Column(db.Boolean, default=False)
     is_visible = db.Column(db.Boolean, default=True, nullable=False)
