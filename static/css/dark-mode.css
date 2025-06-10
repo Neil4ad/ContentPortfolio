@@ -35,10 +35,9 @@
    ================== */
 
 [data-theme="dark"] header {
-    border-bottom-color: var(--border-color);
-    background-color: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background-color: var(--bg-color) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 [data-theme="dark"] footer {
