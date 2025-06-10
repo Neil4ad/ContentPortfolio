@@ -500,6 +500,20 @@ body {
     border-color: rgba(13, 202, 240, 0.3) !important;
 }
 
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+    color: var(--admin-text-color) !important;
+}
+
+[data-theme="dark"] .table td strong,
+[data-theme="dark"] .table th strong {
+    color: var(--admin-text-color) !important;
+}
+
+[data-theme="dark"] .table tbody td {
+    color: var(--admin-text-color) !important;
+}
+
 /* Tabs */
 [data-theme="dark"] .nav-tabs {
     border-bottom-color: var(--admin-border-color) !important;
