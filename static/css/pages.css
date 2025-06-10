@@ -54,20 +54,19 @@
 }
 
 .hero-about {
-    font-size: var(--font-size-base); 
-    max-width: 600px;
+    font-size: var(--font-size-base);
+    max-width: 580px;
     margin: 0 auto;
     color: var(--hero-text-color, white);
-    line-height: var(--line-height-loose);
-    text-align: left; 
+    line-height: 1.4;
+    text-align: left;
 }
 
 .hero-about::first-line {
     font-size: 1.2em;
     font-weight: 600;
-    line-height: 1.4;
+    line-height: 1.2;
 }
-
 /* ==================
    PROJECTS PAGE STYLES
    ================== */
