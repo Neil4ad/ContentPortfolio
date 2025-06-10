@@ -1,7 +1,4 @@
-/* 
- * pages.css - Page-specific styles
- * Portfolio Website CSS Refactor - Optimized Version
- */
+
 
 /* ==================
    HOME PAGE STYLES
@@ -57,12 +54,12 @@
 }
 
 .hero-about {
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-base); 
     max-width: 600px;
     margin: 0 auto;
     color: var(--hero-text-color, white);
-    opacity: 0.8;
     line-height: var(--line-height-loose);
+    text-align: left; 
 }
 
 /* ==================
