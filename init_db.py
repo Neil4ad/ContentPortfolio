@@ -37,25 +37,26 @@ def init_database():
         admin_user.set_password('changeme123')  # Hash generated here will be compatible
         db.session.add(admin_user)
         
-        # Create default categories
+        # Create default categories (matching template suggestions)
         categories = [
-            Category(name='Web Development', is_active=True),
-            Category(name='Content Strategy', is_active=True),
-            Category(name='UX Writing', is_active=True),
-            Category(name='Digital Marketing', is_active=True),
-            Category(name='Brand Strategy', is_active=True)
+            Category(name='Articles', is_active=True),
+            Category(name='Blog Posts', is_active=True),
+            Category(name='Case Studies', is_active=True),
+            Category(name='Websites', is_active=True),
+            Category(name='Branding', is_active=True),
+            Category(name='UX Design', is_active=True)
         ]
         
         for category in categories:
             db.session.add(category)
         
-        # Create default business goals
+        # Create default business goals (matching template suggestions)
         business_goals = [
-            BusinessGoal(name='Increase Conversions', color='#10B981', is_active=True),
-            BusinessGoal(name='Improve User Experience', color='#3B82F6', is_active=True),
-            BusinessGoal(name='Build Brand Awareness', color='#8B5CF6', is_active=True),
-            BusinessGoal(name='Drive Engagement', color='#F59E0B', is_active=True),
-            BusinessGoal(name='Generate Leads', color='#EF4444', is_active=True)
+            BusinessGoal(name='User Engagement', color='#3B82F6', is_active=True),      # Blue
+            BusinessGoal(name='Education', color='#10B981', is_active=True),            # Green
+            BusinessGoal(name='Brand Awareness', color='#8B5CF6', is_active=True),      # Purple
+            BusinessGoal(name='Lead Generation', color='#F59E0B', is_active=True),      # Orange
+            BusinessGoal(name='Strategy & Planning', color='#6366F1', is_active=True)   # Indigo
         ]
         
         for goal in business_goals:
@@ -98,6 +99,12 @@ def init_database():
         print("   Password: changeme123")
         print("   ⚠️  IMPORTANT: Change this password after first login!")
         print("\n💡 Note: Password hash generated in current environment for compatibility")
+        print("\n📂 Default Categories:")
+        for category in Category.query.all():
+            print(f"   - {category.name}")
+        print("\n🎯 Default Content Goals:")
+        for goal in BusinessGoal.query.all():
+            print(f"   - {goal.name} ({goal.color})")
 
 def reset_admin_password_only():
     """Reset only the admin password without reinitializing the entire database"""

@@ -140,7 +140,7 @@ def initialize_db():
     
     # Create default categories if they don't exist
     if Category.query.count() == 0:
-        default_categories = ['Article', 'Blog', 'Case Study', 'Website']
+        default_categories = ['Articles', 'Blog Posts', 'Case Studies', 'Websites', 'Branding', 'UX Design']
         for cat_name in default_categories:
             category = Category(name=cat_name, is_active=True)
             db.session.add(category)
