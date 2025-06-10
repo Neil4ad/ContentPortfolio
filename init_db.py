@@ -2,6 +2,7 @@
 """
 Database initialization script for ContentPortfolio
 Creates all tables and sets up initial data
+Works in any environment (local, PythonAnywhere, etc.)
 """
 
 import sys
@@ -26,11 +27,14 @@ def init_database():
         print("Setting up initial data...")
         
         # Create default admin user
+        # Password hash will be generated in current environment for compatibility
         admin_user = User(
             username='admin',
             email='admin@example.com'
         )
-        admin_user.set_password('changeme123')  # Change this password!
+        
+        print("Setting admin password (generating hash in current environment)...")
+        admin_user.set_password('changeme123')  # Hash generated here will be compatible
         db.session.add(admin_user)
         
         # Create default categories
@@ -73,7 +77,15 @@ def init_database():
         db.session.add(site_settings)
         
         # Commit all changes
+        print("Committing changes to database...")
         db.session.commit()
+        
+        # Verify admin user was created properly
+        admin_check = User.query.filter_by(username='admin').first()
+        if admin_check:
+            print("✅ Admin user created and verified successfully!")
+        else:
+            print("⚠️  Warning: Admin user creation could not be verified")
         
         print("✅ Database initialized successfully!")
         print("📋 Summary:")
@@ -85,10 +97,49 @@ def init_database():
         print("   Username: admin")
         print("   Password: changeme123")
         print("   ⚠️  IMPORTANT: Change this password after first login!")
+        print("\n💡 Note: Password hash generated in current environment for compatibility")
+
+def reset_admin_password_only():
+    """Reset only the admin password without reinitializing the entire database"""
+    
+    with app.app_context():
+        admin_user = User.query.filter_by(username='admin').first()
+        
+        if not admin_user:
+            print("❌ Admin user not found! Run full initialization first.")
+            return False
+        
+        print("Resetting admin password (generating new hash in current environment)...")
+        admin_user.set_password('changeme123')
+        db.session.commit()
+        
+        print("✅ Admin password reset successfully!")
+        print("🔐 Login credentials:")
+        print("   Username: admin")
+        print("   Password: changeme123")
+        print("   ⚠️  Change this password after logging in!")
+        
+        return True
 
 if __name__ == '__main__':
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Initialize ContentPortfolio database')
+    parser.add_argument('--reset-password-only', action='store_true', 
+                       help='Only reset admin password without reinitializing database')
+    
+    args = parser.parse_args()
+    
     try:
-        init_database()
+        if args.reset_password_only:
+            reset_admin_password_only()
+        else:
+            init_database()
     except Exception as e:
-        print(f"❌ Error initializing database: {e}")
+        print(f"❌ Error: {e}")
+        print("\n🔧 Troubleshooting tips:")
+        print("   - Ensure you're in the correct directory")
+        print("   - Check that all required files (app.py, models.py) exist")
+        print("   - Verify database permissions")
+        print("   - If password issues persist, try: python3 init_db.py --reset-password-only")
         sys.exit(1)
