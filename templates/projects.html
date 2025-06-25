@@ -54,9 +54,9 @@
     <!-- Projects Grid -->
     <div class="projects-grid">
         {% for project in projects %}
-        <div class="project-card fade-in" 
-             data-category="{{ project.category.name if project.category else '' }}"
-             data-business-goal="{{ project.business_goal.name if project.business_goal else '' }}">
+        <a href="{{ url_for('view_project', id=project.id) }}" class="project-card fade-in" 
+           data-category="{{ project.category.name if project.category else '' }}"
+           data-business-goal="{{ project.business_goal.name if project.business_goal else '' }}">
             <div class="project-card-image">
                 {% if project.thumbnail_url %}
                 <img src="{{ project.thumbnail_url }}" alt="{{ project.title }}">
@@ -65,42 +65,41 @@
                     <i class="fas fa-file-alt"></i>
                 </div>
                 {% endif %}
+                <!-- Visual overlay effect (not clickable, just animation) -->
                 <div class="project-card-overlay">
-                    <a href="{{ url_for('view_project', id=project.id) }}" class="project-card-link">
+                    <div class="project-card-overlay-content">
                         <span>View Details</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12h14"></path>
                             <path d="M12 5l7 7-7 7"></path>
                         </svg>
-                    </a>
-                </div>
-            </div>
-            <a href="{{ url_for('view_project', id=project.id) }}" class="project-content-link">
-                <div class="project-card-content">
-                    <h3 class="project-card-title">{{ project.title }}</h3>
-                    <p class="project-card-description">{{ project.description|truncate_text(100) }}</p>
-                    <div class="project-card-meta">
-                        {% if project.category %}
-                        <span class="project-category">{{ project.category.name }}</span>
-                        {% endif %}
-                        {% if project.business_goal %}
-                        <span class="project-business-goal" data-goal-color="{{ project.business_goal.color }}">
-                            {{ project.business_goal.name }}
-                        </span>
-                        {% endif %}
-                        {% if project.is_external %}
-                        <span class="project-type-indicator" title="Has external link">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                                <polyline points="15 3 21 3 21 9"></polyline>
-                                <line x1="10" y1="14" x2="21" y2="3"></line>
-                            </svg>
-                        </span>
-                        {% endif %}
                     </div>
                 </div>
-            </a>
-        </div>
+            </div>
+            <div class="project-card-content">
+                <h3 class="project-card-title">{{ project.title }}</h3>
+                <p class="project-card-description">{{ project.description|truncate_text(100) }}</p>
+                <div class="project-card-meta">
+                    {% if project.category %}
+                    <span class="project-category">{{ project.category.name }}</span>
+                    {% endif %}
+                    {% if project.business_goal %}
+                    <span class="project-business-goal" data-goal-color="{{ project.business_goal.color }}">
+                        {{ project.business_goal.name }}
+                    </span>
+                    {% endif %}
+                    {% if project.is_external %}
+                    <span class="project-type-indicator" title="Has external link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
         {% endfor %}
     </div>
 

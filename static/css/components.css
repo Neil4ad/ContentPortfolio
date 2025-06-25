@@ -1,5 +1,3 @@
-
-
 /* ==================
    UNIVERSAL CARD SYSTEM
    ================== */
@@ -70,118 +68,15 @@
     font-size: var(--font-size-sm);
 }
 
-.card-link {
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    color: var(--accent-color);
-    position: relative;
-    margin-top: auto;
-    text-decoration: none;
-    transition: color var(--transition-speed) var(--transition-ease);
-    font-size: var(--font-size-sm);
-}
+/* ==================
+   CLICKABLE PROJECT CARDS
+   ================== */
 
-.card-link:hover {
-    color: var(--link-hover-color, var(--accent-color));
-}
-
-.card-link:after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: -4px;
-    left: 0;
-    background-color: var(--accent-color);
-    transition: width var(--transition-speed) var(--transition-ease);
-}
-
-.card-link:hover:after {
-    width: 100%;
-}
-
-.card-link svg {
-    width: 1rem;
-    height: 1rem;
-    margin-left: var(--spacing-sm);
-}
-
-/* Card Variants */
-.card--placeholder {
-    background-color: var(--bg-color-light);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--text-color-muted);
-    border: 2px dashed var(--border-color);
-}
-
-.card--placeholder i {
-    font-size: 3rem;
-}
-
-/* Project Card Overlay System */
-.project-card .card-image,
-.project-card-image {
-    position: relative;
-}
-
-.project-card-overlay {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity var(--transition-speed) var(--transition-ease);
-}
-
-.project-card:hover .project-card-overlay {
-    opacity: 1;
-}
-
-.project-card-overlay .project-card-link {
-    background-color: var(--primary-color);
-    color: white;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--radius-md);
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    transition: background-color var(--transition-speed) var(--transition-ease);
-    text-decoration: none;
-}
-
-.project-card-overlay .project-card-link:hover {
-    background-color: var(--button-hover-color, var(--accent-color));
-    color: white;
-}
-
-.project-card-overlay .project-card-link:after {
-    display: none;
-}
-
-/* Clickable Content Areas */
-.card-content-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-.card-content-link:hover {
-    text-decoration: none;
-    color: inherit;
-}
-
-.card-content-link:after {
-    display: none;
-}
-
-/* Legacy Class Support (for existing templates) */
-.work-card, .project-card {
+/* Base styling for clickable cards */
+.work-card,
+.project-card,
+a.work-card,
+a.project-card {
     background-color: var(--card-bg-color);
     border-radius: var(--radius-lg);
     overflow: hidden;
@@ -192,15 +87,14 @@
     display: flex;
     flex-direction: column;
     border: 1px solid transparent;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
 }
 
-.work-card:hover, .project-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-xl);
-    border-color: var(--border-color);
-}
-
-.work-card-image, .project-card-image {
+/* Card Images */
+.work-card-image,
+.project-card-image {
     position: relative;
     width: 100%;
     height: 200px;
@@ -211,7 +105,8 @@
     justify-content: center;
 }
 
-.work-card-image img, .project-card-image img {
+.work-card-image img,
+.project-card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -220,18 +115,17 @@
     transition: transform var(--transition-speed) var(--transition-ease);
 }
 
-.work-card:hover .work-card-image img, .project-card:hover .project-card-image img {
-    transform: scale(1.05);
-}
-
-.work-card-content, .project-card-content {
+/* Card Content */
+.work-card-content,
+.project-card-content {
     padding: var(--spacing-lg);
     flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
 
-.work-card-title, .project-card-title {
+.work-card-title,
+.project-card-title {
     font-size: var(--font-size-xl);
     font-weight: 600;
     margin-bottom: var(--spacing-sm);
@@ -239,7 +133,8 @@
     line-height: var(--line-height-tight);
 }
 
-.work-card-description, .project-card-description {
+.work-card-description,
+.project-card-description {
     margin-bottom: var(--spacing-lg);
     flex-grow: 1;
     color: var(--text-color-light);
@@ -247,43 +142,7 @@
     font-size: var(--font-size-sm);
 }
 
-.work-card-link, .project-card-link {
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    color: var(--accent-color);
-    position: relative;
-    margin-top: auto;
-    text-decoration: none;
-    transition: color var(--transition-speed) var(--transition-ease);
-    font-size: var(--font-size-sm);
-}
-
-.work-card-link:hover, .project-card-link:hover {
-    color: var(--link-hover-color, var(--accent-color));
-}
-
-.work-card-link:after, .project-card-link:after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: -4px;
-    left: 0;
-    background-color: var(--accent-color);
-    transition: width var(--transition-speed) var(--transition-ease);
-}
-
-.work-card-link:hover:after, .project-card-link:hover:after {
-    width: 100%;
-}
-
-.work-card-link svg, .project-card-link svg {
-    width: 1rem;
-    height: 1rem;
-    margin-left: var(--spacing-sm);
-}
-
+/* Placeholder styling */
 .work-card-placeholder {
     background-color: var(--bg-color-light);
     display: flex;
@@ -297,26 +156,114 @@
     font-size: 3rem;
 }
 
-.project-content-link {
+/* ==================
+   PROJECTS PAGE CARDS - Overlay "View Details" effect
+   ================== */
+
+.project-card:hover,
+a.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--border-color);
     text-decoration: none;
     color: inherit;
-    display: block;
 }
 
-.project-content-link:hover {
-    text-decoration: none;
-    color: inherit;
+.project-card:hover .project-card-image img,
+a.project-card:hover .project-card-image img {
+    transform: scale(1.05);
 }
 
-.project-content-link:after {
+/* Project Card Overlay Animation */
+.project-card-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity var(--transition-speed) var(--transition-ease);
+    pointer-events: none; /* Visual only - doesn't interfere with card clicks */
+}
+
+.project-card:hover .project-card-overlay,
+a.project-card:hover .project-card-overlay {
+    opacity: 1;
+}
+
+.project-card-overlay-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+    transform: translateY(10px);
+    transition: transform var(--transition-speed) var(--transition-ease);
+}
+
+.project-card:hover .project-card-overlay-content,
+a.project-card:hover .project-card-overlay-content {
+    transform: translateY(0);
+}
+
+/* Remove underlines from project cards only (not work cards) */
+a.project-card:after:not(a.work-card:after) {
     display: none;
 }
 
 /* ==================
-   CATEGORY AND BUSINESS GOAL SYSTEM - FIXED
+   HOMEPAGE CARDS - Animated underline effect (MOVED TO END)
    ================== */
 
-/* Category Pills - Consistent Styling */
+.work-card:hover,
+a.work-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    text-decoration: none;
+    color: inherit;
+}
+
+.work-card:hover .work-card-image img,
+a.work-card:hover .work-card-image img {
+    transform: scale(1.05);
+}
+
+/* Override overflow for underline animation */
+.work-card,
+a.work-card {
+    overflow: visible;
+}
+
+/* Animated underline - positioned inside the card */
+.work-card::after,
+a.work-card::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;  /* 8px up from bottom edge */
+    left: 8px;    /* 8px in from left */
+    right: 8px;   /* 8px in from right */
+    width: 0;
+    height: 4px;
+    background-color: var(--link-hover-color, #3b82f6);
+    transition: width var(--transition-speed) ease;
+    z-index: 1;
+    border-radius: 2px;
+}
+
+.work-card:hover::after,
+a.work-card:hover::after {
+    width: calc(100% - 16px); /* Account for left/right margins */
+}
+
+/* ==================
+   CATEGORY AND BUSINESS GOAL PILLS
+   ================== */
+
 .work-card-category, 
 .project-card-category, 
 .project-category {
@@ -337,13 +284,6 @@
     max-width: fit-content;
 }
 
-.work-card-category:hover, 
-.project-card-category:hover, 
-.project-category:hover {
-    background-color: #d1d5db;
-}
-
-/* Business Goal Pills - Will get colors from JavaScript */
 .work-card-business-goal,
 .project-card-business-goal,
 .project-business-goal {
@@ -360,13 +300,12 @@
     cursor: default;
     width: auto;
     max-width: fit-content;
-    /* Default color - will be overridden by inline styles from JavaScript */
     background-color: var(--primary-color);
     color: white;
 }
 
 /* ==================
-   PROJECT FILTER COMPONENTS 
+   FILTER COMPONENTS
    ================== */
 
 .filter-container {
@@ -392,45 +331,7 @@
     gap: 0.75rem;
 }
 
-/* ==================
-   FILTER BUTTON SYSTEM - FIXED
-   ================== */
-
-.category-filter-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--bg-color-light);
-    color: var(--text-color);
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-align: center;
-    white-space: nowrap;
-    transition: all var(--transition-speed) var(--transition-ease);
-    border: 1px solid var(--border-color);
-    cursor: pointer;
-    min-height: 36px;
-    width: auto;
-    text-decoration: none;
-    font-family: inherit;
-}
-
-.category-filter-btn:hover {
-    background-color: var(--bg-color-dark);
-    border-color: var(--primary-color);
-    color: var(--text-color);
-    text-decoration: none;
-}
-
-.category-filter-btn.nd-active,
-.category-filter-btn.active {
-    background-color: var(--primary-color);
-    color: white;
-    border-color: var(--primary-color);
-}
-
+.category-filter-btn,
 .business-goal-filter-btn {
     display: inline-flex;
     align-items: center;
@@ -452,6 +353,7 @@
     font-family: inherit;
 }
 
+.category-filter-btn:hover,
 .business-goal-filter-btn:hover {
     background-color: var(--bg-color-dark);
     border-color: var(--primary-color);
@@ -459,61 +361,15 @@
     text-decoration: none;
 }
 
-.business-goal-filter-btn.nd-active,
-.business-goal-filter-btn.active {
-    /* Colors will be set by JavaScript for custom goal colors */
-    color: white;
-}
-
-/* ==================
-   DARK MODE SUPPORT
-   ================== */
-
-[data-theme="dark"] .work-card-category,
-[data-theme="dark"] .project-card-category,
-[data-theme="dark"] .project-category {
-    background-color: #4b5563;
-    color: #d1d5db;
-}
-
-[data-theme="dark"] .work-card-category:hover,
-[data-theme="dark"] .project-card-category:hover,
-[data-theme="dark"] .project-category:hover {
-    background-color: #6b7280;
-}
-
-[data-theme="dark"] .category-filter-btn {
-    background-color: var(--bg-color-dark);
-    border-color: var(--border-color);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .category-filter-btn:hover {
-    background-color: var(--bg-color-light);
-    border-color: var(--primary-color);
-}
-
-[data-theme="dark"] .category-filter-btn.nd-active,
-[data-theme="dark"] .category-filter-btn.active {
+.category-filter-btn.nd-active,
+.category-filter-btn.active {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
 }
 
-[data-theme="dark"] .business-goal-filter-btn {
-    background-color: var(--bg-color-dark);
-    border-color: var(--border-color);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .business-goal-filter-btn:hover {
-    background-color: var(--bg-color-light);
-    border-color: var(--primary-color);
-}
-
-[data-theme="dark"] .business-goal-filter-btn.nd-active,
-[data-theme="dark"] .business-goal-filter-btn.active {
-    /* Colors will be set by JavaScript for custom goal colors */
+.business-goal-filter-btn.nd-active,
+.business-goal-filter-btn.active {
     color: white;
 }
 
@@ -560,32 +416,6 @@
     height: 1rem;
 }
 
-/* Button Variants */
-.btn--secondary {
-    background-color: transparent;
-    color: var(--text-color);
-    border-color: var(--border-color);
-}
-
-.btn--secondary:hover {
-    background-color: var(--bg-color-light);
-    color: var(--text-color);
-    border-color: var(--border-color);
-}
-
-.btn--sm {
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-sm);
-    min-height: 36px;
-}
-
-.btn--lg {
-    padding: var(--spacing-md) var(--spacing-xl);
-    font-size: var(--font-size-lg);
-    min-height: 52px;
-}
-
-/* Button Legacy Support */
 .btn-secondary {
     background-color: transparent;
     color: var(--text-color);
@@ -654,12 +484,7 @@
     opacity: 1;
 }
 
-.form-control--textarea {
-    min-height: 120px;
-    resize: vertical;
-}
-
-.form-control--invalid {
+.form-control.is-invalid {
     border-color: var(--danger-color);
 }
 
@@ -693,7 +518,6 @@
     margin-top: var(--spacing-xs);
 }
 
-/* Form Legacy Support */
 .form-group {
     margin-bottom: var(--spacing-lg);
 }
@@ -701,10 +525,6 @@
 textarea.form-control {
     min-height: 120px;
     resize: vertical;
-}
-
-.form-control.is-invalid {
-    border-color: var(--danger-color);
 }
 
 /* ==================
@@ -749,7 +569,6 @@ textarea.form-control {
     background-color: var(--accent-color);
 }
 
-/* Theme Toggle */
 .theme-toggle {
     background: none;
     border: none;
@@ -773,7 +592,7 @@ textarea.form-control {
     height: 24px;
 }
 
-/* Legacy Class Support */
+/* Legacy navbar support */
 .navbar-link {
     color: var(--text-color);
     text-decoration: none;
@@ -810,6 +629,42 @@ textarea.form-control {
 .navbar-link.active:after {
     width: 100%;
     background-color: var(--link-hover-color);
+}
+
+/* ==================
+   DARK MODE SUPPORT
+   ================== */
+
+[data-theme="dark"] .work-card-category,
+[data-theme="dark"] .project-card-category,
+[data-theme="dark"] .project-category {
+    background-color: #4b5563;
+    color: #d1d5db;
+}
+
+[data-theme="dark"] .category-filter-btn,
+[data-theme="dark"] .business-goal-filter-btn {
+    background-color: var(--bg-color-dark);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .category-filter-btn:hover,
+[data-theme="dark"] .business-goal-filter-btn:hover {
+    background-color: var(--bg-color-light);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .category-filter-btn.nd-active,
+[data-theme="dark"] .category-filter-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .business-goal-filter-btn.nd-active,
+[data-theme="dark"] .business-goal-filter-btn.active {
+    color: white;
 }
 
 /* ==================

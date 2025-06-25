@@ -19,7 +19,7 @@
     
     <div class="works-grid">
         {% for project in projects %}
-            <article class="work-card">
+            <a href="{{ url_for('view_project', id=project.id) }}" class="work-card">
                 {% if project.thumbnail_url %}
                     <div class="work-card-image">
                         <img src="{{ project.thumbnail_url }}" alt="{{ project.title }}">
@@ -41,11 +41,8 @@
                     </div>
                     {% endif %}
                     <p class="work-card-description">{{ project.description|truncate_text(150) }}</p>
-                    <a href="{{ url_for('view_project', id=project.id) }}" class="work-card-link">
-                        View Project
-                    </a>
                 </div>
-            </article>
+            </a>
         {% else %}
             <div class="no-projects">
                 <div class="no-projects-icon">📑</div>
