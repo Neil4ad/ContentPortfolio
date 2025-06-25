@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SubmitField, URLField, SelectField, HiddenField, ColorField, IntegerField
+from wtforms import StringField, TextAreaField, PasswordField, BooleanField, SubmitField, URLField, SelectField, HiddenField, ColorField, IntegerField, DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, URL, Optional, ValidationError, NumberRange
 from flask_wtf.file import FileField, FileAllowed
 from models import Category, BusinessGoal
@@ -113,6 +113,10 @@ class ProjectForm(FlaskForm):
     
     # NEW: Business Goal dropdown (optional)
     business_goal_id = SelectField('Business Goal', coerce=int, validators=[Optional()])
+    
+    # NEW: Optional project date field
+    project_date = DateField('Project Date', validators=[Optional()],
+                            description='When was this project completed? (Optional)')
     
     is_visible = BooleanField('Visible on Site', default=True)
     featured = BooleanField('Featured Project')

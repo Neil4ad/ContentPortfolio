@@ -75,8 +75,8 @@
                     </a>
                 </div>
             </div>
-            <div class="project-card-content">
-                <a href="{{ url_for('view_project', id=project.id) }}" class="project-content-link">
+            <a href="{{ url_for('view_project', id=project.id) }}" class="project-content-link">
+                <div class="project-card-content">
                     <h3 class="project-card-title">{{ project.title }}</h3>
                     <p class="project-card-description">{{ project.description|truncate_text(100) }}</p>
                     <div class="project-card-meta">
@@ -98,8 +98,8 @@
                         </span>
                         {% endif %}
                     </div>
-                </a>
-            </div>
+                </div>
+            </a>
         </div>
         {% endfor %}
     </div>

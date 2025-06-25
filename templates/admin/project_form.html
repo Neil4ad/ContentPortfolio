@@ -79,7 +79,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <!-- NEW: Content Goal dropdown -->
+                                    <!-- Content Goal dropdown -->
                                     <div class="form-group mb-3">
                                         <label class="form-label">{{ form.business_goal_id.label }}</label>
                                         {% if form.business_goal_id.errors %}
@@ -98,6 +98,13 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            
+                            <!-- NEW: Project Date Field -->
+                            <div class="form-group mb-3">
+                                <label class="form-label">{{ form.project_date.label }}</label>
+                                {{ form.project_date(class="form-control") }}
+                                <div class="form-text">When was this project completed? Leave blank to hide the date. Shows as "Month Year" on your site.</div>
                             </div>
                             
                             <div class="row">
@@ -254,6 +261,12 @@
                                 <span class="admin-preview-goal-badge" data-goal-color="{{ project.business_goal.color }}">
                                     {{ project.business_goal.name }}
                                 </span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if project.project_date %}
+                            <div class="mt-2">
+                                <small class="text-muted">Project Date: {{ project.project_date.strftime('%B %Y') }}</small>
                             </div>
                             {% endif %}
                             
