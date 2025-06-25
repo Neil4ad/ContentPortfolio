@@ -587,7 +587,8 @@ def add_project():
                 tools_used=form.tools_used.data,
                 # Resource URL and text for PDFs/documents
                 resource_url=form.resource_url.data if form.resource_url.data else None,
-                resource_text=form.resource_text.data if form.resource_text.data else "View Resource"
+                resource_text=form.resource_text.data if form.resource_text.data else "View Resource",
+                project_date=form.project_date.data
             )
             
             db.session.add(project)
@@ -626,6 +627,7 @@ def edit_project(id):
             project.tools_used = form.tools_used.data
             project.resource_url = form.resource_url.data
             project.resource_text = form.resource_text.data
+            project.project_date = form.project_date.data
             
             # Handle file upload if any
             if form.thumbnail_url.data:

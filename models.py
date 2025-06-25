@@ -65,6 +65,9 @@ class Project(db.Model):
     thumbnail_url = db.Column(db.String(255), nullable=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     
+    # NEW: Optional project completion date
+    project_date = db.Column(db.Date, nullable=True)
+    
     # Category relationship (required)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     

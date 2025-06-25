@@ -35,10 +35,12 @@
                 </div>
                 {% endif %}
                 
+                {% if project.project_date %}
                 <div class="project-meta-item">
-                    <span class="project-meta-label">Date</span>
-                    <span class="project-meta-value">{{ project.date_added.strftime('%B %d, %Y') if project.date_added else 'Unknown' }}</span>
+                    <span class="project-meta-label">Project Date</span>
+                    <span class="project-meta-value">{{ project.project_date.strftime('%B %Y') }}</span>
                 </div>
+                {% endif %}
                 
                 {% if project.company %}
                 <div class="project-meta-item">
