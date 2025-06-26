@@ -3,16 +3,9 @@
    ================== */
 
 .card {
-    background-color: var(--card-bg-color);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    transition: transform var(--transition-speed) var(--transition-ease),
-                box-shadow var(--transition-speed) var(--transition-ease);
-    height: 100%;
     display: flex;
     flex-direction: column;
-    border: 1px solid transparent;
+    height: 100%;
 }
 
 .card:hover {
@@ -79,7 +72,6 @@ a.work-card,
 a.project-card {
     background-color: var(--card-bg-color);
     border-radius: var(--radius-lg);
-    overflow: hidden;
     box-shadow: var(--shadow-md);
     transition: transform var(--transition-speed) var(--transition-ease),
                 box-shadow var(--transition-speed) var(--transition-ease);
@@ -90,6 +82,7 @@ a.project-card {
     text-decoration: none;
     color: inherit;
     position: relative;
+    padding-bottom: 12px; /* ensures space for underline animation */
 }
 
 /* Card Images */
@@ -122,6 +115,8 @@ a.project-card {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 1; /* UNDER the ::after line */
 }
 
 .work-card-title,
@@ -217,7 +212,7 @@ a.project-card:after:not(a.work-card:after) {
 }
 
 /* ==================
-   HOMEPAGE CARDS - Animated underline effect (MOVED TO END)
+   HOMEPAGE CARDS - Animated underline effect
    ================== */
 
 .work-card:hover,
@@ -233,31 +228,27 @@ a.work-card:hover .work-card-image img {
     transform: scale(1.05);
 }
 
-/* Override overflow for underline animation */
-.work-card,
+/* FINAL WORKING - Work card underline animation */
 a.work-card {
-    overflow: visible;
+    overflow: hidden !important;
 }
 
-/* Animated underline - positioned inside the card */
-.work-card::after,
 a.work-card::after {
     content: '';
     position: absolute;
-    bottom: 8px;  /* 8px up from bottom edge */
-    left: 8px;    /* 8px in from left */
-    right: 8px;   /* 8px in from right */
+    bottom: 4px;
+    left: 16px;
     width: 0;
     height: 4px;
     background-color: var(--link-hover-color, #3b82f6);
     transition: width var(--transition-speed) ease;
-    z-index: 1;
+    z-index: 999;
     border-radius: 2px;
+    max-width: calc(100% - 32px);  
 }
 
-.work-card:hover::after,
 a.work-card:hover::after {
-    width: calc(100% - 16px); /* Account for left/right margins */
+    width: calc(100% - 32px);
 }
 
 /* ==================
@@ -720,3 +711,7 @@ textarea.form-control {
         padding: var(--spacing-xs) var(--spacing-sm);
     }
 }
+
+
+
+

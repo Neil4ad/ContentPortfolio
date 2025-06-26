@@ -162,8 +162,9 @@ a:hover {
     color: var(--link-hover-color, var(--accent-color));
 }
 
+
 /* Global Link Underline Animation (excluded for specific components) */
-a:not(.btn):not(.work-card-link):not(.project-card-link):not(.navbar-link):not(.admin-nav-link):not(.social-link):not(.table-action):not(.brand-wrapper):not(.footer-contact-link):after {
+a:not(.btn):not(.work-card):not(.work-card-link):not(.project-card-link):not(.navbar-link):not(.admin-nav-link):not(.social-link):not(.table-action):not(.brand-wrapper):not(.footer-contact-link):after {
     content: '';
     position: absolute;
     width: 0;
