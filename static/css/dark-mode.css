@@ -108,6 +108,12 @@
    BUTTON VARIANTS
    ================== */
 /* Fix button text contrast on hover in dark mode */
+
+[data-theme="dark"] .btn,
+[data-theme="dark"] a.btn {
+    color: white !important;
+}
+
 [data-theme="dark"] .btn:hover,
 [data-theme="dark"] a.btn:hover {
     color: #181818 !important;
