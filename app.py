@@ -323,6 +323,9 @@ def dashboard():
         categories=categories,
         active_tab='dashboard'
     )
+@app.route('/contentadmin/')
+def dashboard_redirect():
+    return redirect(url_for('dashboard'))
 
 # Category Management Routes
 @app.route('/contentadmin/categories')
