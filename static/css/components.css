@@ -251,6 +251,10 @@ a.work-card:hover::after {
     width: calc(100% - 32px);
 }
 
+a.project-card::after {
+    display: none !important;
+}
+
 /* ==================
    CATEGORY AND BUSINESS GOAL PILLS
    ================== */
