@@ -116,7 +116,7 @@
 
 [data-theme="dark"] .btn:hover,
 [data-theme="dark"] a.btn:hover {
-    color: #181818 !important;
+    color: white !important;
 }
 
 [data-theme="dark"] .btn-secondary {
