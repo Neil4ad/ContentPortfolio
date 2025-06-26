@@ -538,18 +538,3 @@ html[data-theme="light"] .moon-icon {
     }
 }
 
-/* Project card overlay (from projects page) */
-.project-card-overlay {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.project-card:hover .project-card-overlay {
-    opacity: 1;
-}

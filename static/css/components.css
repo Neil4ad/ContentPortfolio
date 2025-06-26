@@ -255,6 +255,10 @@ a.project-card::after {
     display: none !important;
 }
 
+.project-card-image {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
 /* ==================
    CATEGORY AND BUSINESS GOAL PILLS
    ================== */
