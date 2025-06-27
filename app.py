@@ -783,7 +783,7 @@ def admin_settings():
     
     return render_template('admin/settings.html', form=form, settings=settings, active_tab='settings')
 
-@app.route('/contentadmin/export-settings', methods=['POST'])
+@app.route('/contentadmin/export-settings', methods=['GET', 'POST'])
 @login_required
 def export_settings():
     settings = SiteSettings.query.first()
@@ -812,7 +812,21 @@ def export_settings():
     }
     
     # Return as downloadable JSON file
-    return jsonify(settings_dict)
+    import io
+    from flask import send_file
+
+    # Create a downloadable file from the JSON data
+    buffer = io.BytesIO()
+    buffer.write(json.dumps(settings_dict, indent=4).encode('utf-8'))
+    buffer.seek(0)
+
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=f'site_settings_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.json',
+        mimetype='application/json'
+    )
+
 
 @app.route('/contentadmin/import-settings', methods=['GET', 'POST'])
 @login_required
