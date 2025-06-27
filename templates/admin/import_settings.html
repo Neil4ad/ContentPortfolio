@@ -63,9 +63,11 @@
                 <div class="col-md-6 mb-3 mb-md-0">
                     <h4 class="h6">Reset to Defaults</h4>
                     <p class="small">Reset all settings to their default values.</p>
-                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmReset()">
-                        <i class="fas fa-undo"></i> Reset to Defaults
-                    </button>
+                    <form method="post" action="{{ url_for('restore_defaults') }}" onsubmit="return confirm('Are you sure you want to reset all settings to default values? This cannot be undone.');">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="fas fa-undo"></i> Reset to Defaults
+                        </button>
+                    </form>
                 </div>
                 <div class="col-md-6">
                     <h4 class="h6">Visit Site</h4>
@@ -79,12 +81,4 @@
     </div>
 </div>
 
-<script>
-    function confirmReset() {
-        if (confirm('Are you sure you want to reset all settings to default values? This cannot be undone.')) {
-            // Placeholder for reset functionality
-            alert('This feature is not yet implemented. Please contact administrator.');
-        }
-    }
-</script>
 {% endblock %}

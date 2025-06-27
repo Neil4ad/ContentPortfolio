@@ -864,6 +864,36 @@ def import_settings():
     
     return render_template('admin/import_settings.html', active_tab='settings')
 
+        # Restore defaults
+@app.route('/contentadmin/restore-defaults', methods=['POST'])
+@login_required
+def restore_defaults():
+    defaults = {
+        'site_title': "Content Designer & Strategist",
+        'site_subtitle': "Crafting clear, compelling digital experiences that engage audiences and drive results",
+        'about_short': "I help brands communicate more effectively through strategic content design, UX writing, and messaging that connects with audiences.",
+        'about_me': "",
+        'profile_image': "",
+        'brand_name': "Your Name",
+        'logo_url': "",
+        'contact_email': "contact@example.com",
+        'banner_image': "",
+        'banner_gradient_start': "#4F46E5",
+        'banner_gradient_end': "#3B82F6",
+        'hero_text_color': "#ffffff",
+        'link_hover_color': "#4F46E5",
+        'button_hover_color': "#3B82F6",
+        'linkedin_url': "",
+        'linkedin_active': False
+    }
+    settings = SiteSettings.query.first() or SiteSettings()
+    for key, value in defaults.items():
+        setattr(settings, key, value)
+    db.session.add(settings)
+    db.session.commit()
+    flash('✅ Site settings restored to defaults.', 'success')
+    return redirect(url_for('admin_settings'))
+
 # Helper route to check file upload directories
 @app.route('/check-uploads')
 def check_uploads():
