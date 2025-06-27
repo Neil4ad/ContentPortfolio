@@ -19,11 +19,9 @@
                     <h3 class="card-title h5 mb-3">Export Settings</h3>
                     <p class="card-text">Export your current site settings to a JSON file. You can use this file to backup your settings or to transfer them to another installation.</p>
                     
-                    <form action="{{ url_for('export_settings') }}" method="post">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-file-export"></i> Export Settings
-                        </button>
-                    </form>
+                    <a href="{{ url_for('export_settings') }}" class="btn btn-primary">
+                        <i class="fas fa-file-export"></i> Export Settings
+                    </a>
                 </div>
             </div>
         </div>
