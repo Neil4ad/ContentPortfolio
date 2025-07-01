@@ -727,3 +727,178 @@ body {
 .color-suggestion-orange { background-color: #F59E0B; }
 .color-suggestion-indigo { background-color: #6366F1; }
 .color-suggestion-teal { background-color: #14B8A6; }
+
+/* ==================
+   ADMIN IMAGE SYSTEM VARIABLES
+   ================== */
+
+:root {
+    /* Image preview sizing system */
+    --admin-image-preview-xs: 80px;
+    --admin-image-preview-sm: 120px;
+    --admin-image-preview-md: 150px;
+    --admin-image-preview-lg: 200px;
+    --admin-image-preview-xl: 300px;
+    
+    /* Image aspect ratios */
+    --admin-image-square: 1/1;
+    --admin-image-landscape: 16/9;
+    --admin-image-portrait: 3/4;
+}
+
+/* ==================
+   REUSABLE IMAGE COMPONENTS
+   ================== */
+
+/* Base image preview component */
+.admin-image-preview {
+    display: block;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--admin-border-color);
+    object-fit: cover;
+    box-shadow: var(--admin-shadow-sm);
+    transition: transform var(--transition-fast) var(--transition-ease);
+}
+
+.admin-image-preview:hover {
+    transform: scale(1.02);
+}
+
+/* Size variants */
+.admin-image-preview--xs {
+    max-width: var(--admin-image-preview-xs);
+    max-height: var(--admin-image-preview-xs);
+}
+
+.admin-image-preview--sm {
+    max-width: var(--admin-image-preview-sm);
+    max-height: var(--admin-image-preview-sm);
+}
+
+.admin-image-preview--md {
+    max-width: var(--admin-image-preview-md);
+    max-height: var(--admin-image-preview-md);
+}
+
+.admin-image-preview--lg {
+    max-width: var(--admin-image-preview-lg);
+    max-height: var(--admin-image-preview-lg);
+}
+
+/* Aspect ratio variants */
+.admin-image-preview--square {
+    aspect-ratio: var(--admin-image-square);
+}
+
+.admin-image-preview--landscape {
+    aspect-ratio: var(--admin-image-landscape);
+}
+
+/* Specific component classes */
+.admin-profile-preview {
+    max-width: var(--admin-image-preview-md);
+    max-height: var(--admin-image-preview-md);
+    aspect-ratio: var(--admin-image-square);
+}
+
+.admin-thumbnail-preview {
+    max-width: var(--admin-image-preview-lg);
+    max-height: calc(var(--admin-image-preview-lg) * 0.6);
+    aspect-ratio: var(--admin-image-landscape);
+}
+
+/* ==================
+   CONTAINER COMPONENTS
+   ================== */
+
+.admin-image-container {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background-color: var(--admin-bg-color);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--admin-border-color);
+    display: inline-block;
+    position: relative;
+}
+
+.admin-image-container::before {
+    content: attr(data-label);
+    display: block;
+    font-weight: 500;
+    color: var(--admin-text-color);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+/* ==================
+   FOCUS AND ACCESSIBILITY
+   ================== */
+
+.admin-image-preview:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* ==================
+   DARK MODE SUPPORT
+   ================== */
+
+[data-theme="dark"] .admin-image-preview {
+    border-color: var(--admin-border-color);
+}
+
+[data-theme="dark"] .admin-image-container {
+    background-color: var(--admin-card-bg);
+    border-color: var(--admin-border-color);
+}
+
+/* ==================
+   RESPONSIVE BEHAVIOR
+   ================== */
+
+@media (max-width: 768px) {
+    .admin-profile-preview {
+        max-width: var(--admin-image-preview-sm);
+        max-height: var(--admin-image-preview-sm);
+    }
+    
+    .admin-thumbnail-preview {
+        max-width: var(--admin-image-preview-md);
+        max-height: calc(var(--admin-image-preview-md) * 0.6);
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-profile-preview,
+    .admin-thumbnail-preview {
+        max-width: var(--admin-image-preview-xs);
+        max-height: var(--admin-image-preview-xs);
+    }
+}
+
+/* ==================
+   LOADING AND ERROR STATES
+   ================== */
+
+.admin-image-preview[data-loading="true"] {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.admin-image-preview[data-error="true"] {
+    border-color: var(--danger-color);
+    border-style: dashed;
+}
+
+.admin-image-preview[data-error="true"]::after {
+    content: "⚠️ Image failed to load";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+    font-size: var(--font-size-sm);
+    text-align: center;
+}
