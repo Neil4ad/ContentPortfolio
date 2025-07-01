@@ -1,88 +1,7 @@
 /* 
- * base.css - Core variables, typography, and global styles
- * Portfolio Website CSS Refactor - Optimized Version
+ * base-new.css - Reset, typography, and base styles
+ * Consolidated from base.css and styles.css
  */
-
-/* CSS Custom Properties (Variables) */
-:root {
-    /* Color System */
-    --primary-color: #3b82f6;
-    --accent-color: #3b82f6;
-    --secondary-color: #f59e0b;
-    --success-color: #10b981;
-    --danger-color: #ef4444;
-    --warning-color: #f59e0b;
-    --info-color: #3b82f6;
-    
-    /* Text Colors */
-    --text-color: #1f2937;
-    --text-color-light: #6b7280;
-    --text-color-muted: #9ca3af;
-    
-    /* Background Colors */
-    --bg-color: #f8f9fa;
-    --bg-color-light: #f9fafb;
-    --bg-color-dark: #f3f4f6;
-    --card-bg-color: #ffffff;
-    --border-color: #e5e7eb;
-    
-    /* Typography */
-    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    --font-size-base: 1rem;
-    --font-size-sm: 0.875rem;
-    --font-size-lg: 1.125rem;
-    --font-size-xl: 1.25rem;
-    --font-size-2xl: 1.5rem;
-    --font-size-3xl: 1.875rem;
-    --font-size-4xl: 2.25rem;
-    --line-height-base: 1.5;
-    --line-height-tight: 1.25;
-    --line-height-loose: 1.75;
-    
-    /* Spacing System */
-    --spacing-xs: 0.25rem;
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-    --spacing-xl: 2rem;
-    --spacing-2xl: 3rem;
-    --spacing-3xl: 4rem;
-    --spacing-4xl: 2.5rem; /* REDUCED for banner spacing! */
-    
-    /* Layout */
-    --content-max-width: 1200px;
-    --container-padding: 1.5rem;
-    --section-spacing: var(--spacing-4xl);
-    --card-spacing: var(--spacing-xl);
-    
-    /* Border Radius */
-    --radius-sm: 0.25rem;
-    --radius-md: 0.5rem;
-    --radius-lg: 1rem;
-    --radius-xl: 1.5rem;
-    --radius-full: 9999px;
-    
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    
-    /* Transitions */
-    --transition-speed: 0.3s;
-    --transition-fast: 0.15s;
-    --transition-slow: 0.5s;
-    --transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
-    
-    /* Z-index scale */
-    --z-dropdown: 1000;
-    --z-sticky: 1020;
-    --z-fixed: 1030;
-    --z-modal-backdrop: 1040;
-    --z-modal: 1050;
-    --z-tooltip: 1070;
-    
-}
 
 /* Reset and Base Styles */
 *, *::before, *::after {
@@ -162,7 +81,6 @@ a:hover {
     color: var(--link-hover-color, var(--accent-color));
 }
 
-
 /* Global Link Underline Animation (excluded for specific components) */
 a:not(.btn):not(.work-card):not(.work-card-link):not(.project-card-link):not(.navbar-link):not(.admin-nav-link):not(.social-link):not(.table-action):not(.brand-wrapper):not(.footer-contact-link):after {
     content: '';
@@ -231,36 +149,12 @@ textarea:focus {
     text-align: right;
 }
 
-.text-uppercase {
-    text-transform: uppercase;
-}
-
-.text-capitalize {
-    text-transform: capitalize;
-}
-
 .uppercase {
     text-transform: uppercase;
 }
 
 .capitalize {
     text-transform: capitalize;
-}
-
-.font-weight-normal {
-    font-weight: 400;
-}
-
-.font-weight-medium {
-    font-weight: 500;
-}
-
-.font-weight-semibold {
-    font-weight: 600;
-}
-
-.font-weight-bold {
-    font-weight: 700;
 }
 
 .font-normal {
@@ -436,26 +330,4 @@ textarea:focus {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
-}
-
-/* ==================
-   DYNAMIC THEME VARIABLES (moved from base.html)
-   ================== */
-
-/* Apply dynamic CSS variables from template data attributes */
-.dynamic-theme-vars {
-    --banner-gradient-start: attr(data-banner-start);
-    --banner-gradient-end: attr(data-banner-end);
-    --hero-text-color: attr(data-hero-text);
-    --link-hover-color: attr(data-link-hover);
-    --button-hover-color: attr(data-button-hover);
-}
-
-/* Fallback for browsers that don't support attr() with custom properties */
-.dynamic-theme-vars:not([data-banner-start]) {
-    --banner-gradient-start: #4F46E5;
-    --banner-gradient-end: #3B82F6;
-    --hero-text-color: #ffffff;
-    --link-hover-color: #4f46e5;
-    --button-hover-color: #3b82f6;
 }

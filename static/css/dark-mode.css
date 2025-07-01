@@ -1,6 +1,6 @@
 /* 
- * dark-mode.css - Dark theme overrides and variations
- * Portfolio Website CSS Refactor - Optimized Version
+ * dark-mode-new.css - All dark theme overrides
+ * Consolidated from dark-mode.css and scattered dark mode styles
  */
 
 /* ==================
@@ -107,7 +107,6 @@
 /* ==================
    BUTTON VARIANTS
    ================== */
-/* Fix button text contrast on hover in dark mode */
 
 [data-theme="dark"] .btn,
 [data-theme="dark"] a.btn {
@@ -193,6 +192,22 @@
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .business-goal-filter-btn {
+    background-color: var(--bg-color-dark);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .business-goal-filter-btn:hover {
+    background-color: var(--bg-color-light);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .business-goal-filter-btn.nd-active,
+[data-theme="dark"] .business-goal-filter-btn.active {
+    color: white;
 }
 
 /* ==================
@@ -367,7 +382,7 @@ html[data-theme="light"] .moon-icon {
 }
 
 /* ==================
-   TABLE COMPONENTS (Admin)
+   ADMIN COMPATIBILITY
    ================== */
 
 [data-theme="dark"] .data-table th {
@@ -403,7 +418,6 @@ html[data-theme="light"] .moon-icon {
 [data-theme="dark"] .hero-banner,
 [data-theme="dark"] .works-banner,
 [data-theme="dark"] .about-banner {
-    /* Ensure banner text remains readable */
     color: white;
 }
 
