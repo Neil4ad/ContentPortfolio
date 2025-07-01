@@ -31,14 +31,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Optional: redirect root domain to www using environment variable
-REDIRECT_DOMAIN = os.environ.get("REDIRECT_DOMAIN")
-
-@app.before_request
-def redirect_root_domain():
-    if REDIRECT_DOMAIN and request.host == REDIRECT_DOMAIN:
-        return redirect(f"https://www.{REDIRECT_DOMAIN}{request.full_path}", code=301)
-
 # Initialize mail
 mail = Mail(app)
 
