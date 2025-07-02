@@ -213,4 +213,7 @@ class SiteSettingsForm(FlaskForm):
     linkedin_url = StringField('LinkedIn URL')
     linkedin_active = BooleanField('Show LinkedIn')
     
+    # NEW: Business Goal Filter Control
+    show_business_goal_filter = BooleanField('Show Business Goal Filter', default=True)
+    
     submit = SubmitField('Save Settings')

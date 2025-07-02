@@ -9,7 +9,7 @@
 </div>
 
 <section class="works-section container">
-    {% if categories or business_goals %}
+    {% if categories or (business_goals and settings.show_business_goal_filter) %}
     <!-- Category filters -->
     <div id="nd-filter-container" class="filter-container">
         <div class="filter-section">
@@ -29,7 +29,7 @@
             </div>
         </div>
         
-        {% if business_goals %}
+        {% if business_goals and settings.show_business_goal_filter %}
         <div class="filter-section">
             <h6 class="filter-section-title">Filter by Content Goal:</h6>
             <div class="filter-buttons">

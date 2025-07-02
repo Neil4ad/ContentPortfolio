@@ -85,7 +85,17 @@
                             <div class="form-text">URL to your logo image (optional).</div>
                         </div>
                     </div>
-                    
+
+                    <div class="form-group mb-3">
+                        <div class="form-check form-switch">
+                            {{ form.show_business_goal_filter(class="form-check-input", id="show_business_goal_filter") }}
+                            <label class="form-check-label" for="show_business_goal_filter">{{ form.show_business_goal_filter.label }}</label>
+                        </div>
+                        <div class="form-text">
+                            Show business goal filter buttons on the projects page. When disabled, visitors can only filter by category, but business goal badges still appear on individual projects.
+                        </div>
+                    </div>
+
                     <div class="col-md-4">
                         <div class="card">
                             <div class="card-header">

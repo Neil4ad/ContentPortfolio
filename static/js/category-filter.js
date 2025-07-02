@@ -1,6 +1,6 @@
 /**
  * Category and Business Goal filter functionality for projects page
- * This script provides the filtering functionality for project categories and business goals
+ * UPDATED: Independent filtering - clicking one resets the other
  */
 
 // Global state to track active filters
@@ -61,12 +61,30 @@ function initFilters() {
 
 /**
  * Filter projects by category or business goal
+ * UPDATED: Independent filtering - reset other filter when one is clicked
  * @param {HTMLElement} clickedButton - The button that was clicked
  * @param {string} filterValue - The value to filter by ('all' or specific category/goal)
  * @param {string} filterType - Either 'category' or 'business_goal'
  */
 function filterProjects(clickedButton, filterValue, filterType) {
-    // Update the active filter state
+    // UPDATED: Reset the other filter to 'all' when this one is clicked
+    if (filterType === 'category') {
+        activeFilters.category = filterValue;
+        activeFilters.business_goal = 'all'; // Reset business goal filter
+        
+        // Reset business goal buttons
+        resetFilterButtons('.business-goal-filter-btn');
+        setActiveButton('nd-filter-all-goals');
+    } else if (filterType === 'business_goal') {
+        activeFilters.business_goal = filterValue;
+        activeFilters.category = 'all'; // Reset category filter
+        
+        // Reset category buttons
+        resetFilterButtons('.category-filter-btn');
+        setActiveButton('nd-filter-all-categories');
+    }
+    
+    // Update the active filter state for the clicked type
     activeFilters[filterType] = filterValue;
     
     // Update button styles for the specific filter type
@@ -114,18 +132,56 @@ function filterProjects(clickedButton, filterValue, filterType) {
         const hashPrefix = filterType === 'category' ? 'category-' : 'goal-';
         window.location.hash = `${hashPrefix}${filterValue.toLowerCase().replace(/\s+/g, '-')}`;
     } else {
-        // If both filters are 'all', clear the hash
-        if (activeFilters.category === 'all' && activeFilters.business_goal === 'all') {
-            window.location.hash = '';
-        }
+        // Clear the hash since we're showing all
+        window.location.hash = '';
     }
     
-    // Apply the combined filters
+    // Apply the filter (now effectively single filter since other is reset to 'all')
     applyFilters();
 }
 
 /**
+ * Helper function to reset filter buttons
+ */
+function resetFilterButtons(selector) {
+    const buttons = document.querySelectorAll(selector);
+    buttons.forEach(button => {
+        button.classList.remove('nd-active');
+        // Reset business goal button colors
+        if (selector.includes('business-goal')) {
+            const color = button.getAttribute('data-goal-color');
+            if (color) {
+                button.style.backgroundColor = '';
+                button.style.color = '';
+                button.style.borderColor = color;
+            } else {
+                button.style.backgroundColor = '';
+                button.style.color = '';
+                button.style.borderColor = '';
+            }
+        }
+    });
+}
+
+/**
+ * Helper function to set active button by ID
+ */
+function setActiveButton(buttonId) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+        button.classList.add('nd-active');
+        // Special handling for business goal "All" button
+        if (buttonId === 'nd-filter-all-goals') {
+            button.style.backgroundColor = 'var(--primary-color)';
+            button.style.color = 'white';
+            button.style.borderColor = 'var(--primary-color)';
+        }
+    }
+}
+
+/**
  * Apply both category and business goal filters
+ * UPDATED: Since one is always 'all', this effectively does single filtering
  */
 function applyFilters() {
     const projects = document.querySelectorAll('.project-card');
@@ -143,7 +199,7 @@ function applyFilters() {
         const goalMatch = activeFilters.business_goal === 'all' || 
                          cardBusinessGoal === activeFilters.business_goal;
         
-        // Show project only if it matches both filters
+        // Show project only if it matches both filters (but one is always 'all' now)
         if (categoryMatch && goalMatch) {
             card.style.display = '';
             visibleCount++;

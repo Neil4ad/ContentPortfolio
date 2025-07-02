@@ -149,6 +149,9 @@ class SiteSettings(db.Model):
     linkedin_url = db.Column(db.String(255), nullable=True)
     linkedin_active = db.Column(db.Boolean, default=False)
     
+    # NEW: Business goal filter control
+    show_business_goal_filter = db.Column(db.Boolean, default=True, nullable=False)
+    
     def update_from_form(self, form_data):
         """Update settings from form data dictionary"""
         # Mapping of form fields to model attributes
@@ -176,6 +179,7 @@ class SiteSettings(db.Model):
         
         # Handle boolean fields separately
         self.linkedin_active = form_data.get('linkedin_active', False)
+        self.show_business_goal_filter = form_data.get('show_business_goal_filter', True)
     
     def __repr__(self):
         return f'<SiteSettings: {self.site_title}>'
